@@ -1,5 +1,7 @@
 # Disaster Alert & Reporting System (DARS)
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-View%20App-blue?style=for-the-badge&logo=render)](https://dars-frontend.onrender.com)
+
 A comprehensive disaster management platform that provides real-time alerts from global agencies and enables citizen reporting of local incidents.
 
 ## Features
