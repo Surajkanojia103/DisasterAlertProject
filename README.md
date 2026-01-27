@@ -127,6 +127,74 @@ DisasterAlertProject/
 └── README.md
 ```
 
+## Deployment
+
+### Deploy to Render (Recommended)
+
+This project is configured for easy deployment to Render.
+
+#### Prerequisites
+1. A [Render](https://render.com) account (free)
+2. A [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) account (free tier available)
+3. Your GitHub repository
+
+#### Step 1: Set up MongoDB Atlas
+
+1. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+2. Create a free cluster
+3. Create a database user with username and password
+4. Whitelist all IP addresses (0.0.0.0/0) for Render access
+5. Get your connection string (it looks like: `mongodb+srv://username:password@cluster.mongodb.net/dars_db`)
+
+#### Step 2: Deploy Backend to Render
+
+1. Go to [Render Dashboard](https://dashboard.render.com/)
+2. Click **"New +"** → **"Web Service"**
+3. Connect your GitHub repository
+4. Configure:
+   - **Name:** `dars-backend`
+   - **Root Directory:** `backend`
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+5. Add Environment Variables:
+   - `MONGO_URI` = Your MongoDB Atlas connection string
+   - `JWT_SECRET` = Any random secret key (e.g., `mySecretKey123`)
+   - `PORT` = `5000`
+   - `NODE_ENV` = `production`
+6. Click **"Create Web Service"**
+7. **Copy your backend URL** (e.g., `https://dars-backend.onrender.com`)
+
+#### Step 3: Deploy Frontend to Render
+
+1. Click **"New +"** → **"Static Site"**
+2. Connect the same GitHub repository
+3. Configure:
+   - **Name:** `dars-frontend`
+   - **Root Directory:** `frontend`
+   - **Build Command:** `npm install && npm run build`
+   - **Publish Directory:** `dist`
+4. Add Environment Variable:
+   - `VITE_API_URL` = `https://dars-backend.onrender.com/api` (your backend URL + /api)
+5. Click **"Create Static Site"**
+
+#### Step 4: Access Your Live Application
+
+Your app will be live at: `https://dars-frontend.onrender.com`
+
+**Note:** Free tier services may spin down after inactivity. First request might take 30-60 seconds.
+
+### Alternative: Deploy Using render.yaml
+
+This repo includes a `render.yaml` file for automated deployment:
+
+1. Go to Render Dashboard
+2. Click **"New +"** → **"Blueprint"**
+3. Connect your repository
+4. Render will automatically detect `render.yaml` and deploy both services
+5. Add environment variables in the Render dashboard
+
+
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
