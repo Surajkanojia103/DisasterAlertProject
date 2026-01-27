@@ -19,7 +19,8 @@ const ReportDetails = () => {
                         'x-auth-token': token
                     }
                 };
-                const res = await axios.get(`http://localhost:5000/api/reports/${id}`, config);
+                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+                const res = await axios.get(`${API_URL}/reports/${id}`, config);
                 setReport(res.data);
             } catch (err) {
                 console.error("Error fetching report details:", err);

@@ -12,7 +12,8 @@ export const AuthProvider = ({ children }) => {
     // Configure axios base URL (optional, but good practice)
     // axios.defaults.baseURL = 'http://localhost:5000/api'; 
     // For now, we'll use full URLs or proxy. Let's use full URLs for clarity.
-    const API_URL = 'http://localhost:5000/api/auth';
+    const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const API_URL = `${BASE_URL}/auth`;
 
     useEffect(() => {
         const checkLoggedIn = async () => {

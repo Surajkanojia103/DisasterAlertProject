@@ -29,7 +29,8 @@ const AdminPanel = () => {
                         'x-auth-token': token
                     }
                 };
-                const res = await axios.get('http://localhost:5000/api/reports', config); // Assuming this endpoint returns all reports for admin
+                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+                const res = await axios.get(`${API_URL}/reports`, config); // Assuming this endpoint returns all reports for admin
                 setReports(res.data);
 
                 const newStats = res.data.reduce((acc, report) => {
@@ -66,7 +67,8 @@ const AdminPanel = () => {
                 }
             };
 
-            const res = await axios.put(`http://localhost:5000/api/reports/${reportId}/status`, { status: newStatus }, config);
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+            const res = await axios.put(`${API_URL}/reports/${reportId}/status`, { status: newStatus }, config);
 
             // Update local state
             const updatedReports = reports.map(report =>
