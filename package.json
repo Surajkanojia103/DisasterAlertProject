@@ -1,0 +1,14 @@
+{
+    "name": "disaster-alert-project-root",
+    "version": "1.0.0",
+    "description": "Root script to run both frontend and backend",
+    "scripts": {
+        "start": "concurrently \"npm run server\" \"npm run client\"",
+        "server": "cd backend && npm start",
+        "client": "cd frontend && npm run dev",
+        "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+    },
+    "devDependencies": {
+        "concurrently": "^9.2.1"
+    }
+}
