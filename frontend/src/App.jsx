@@ -10,12 +10,13 @@ import Signup from './pages/Signup';
 import AdminPanel from './pages/AdminPanel';
 import UserPanel from './pages/UserPanel';
 import ReportDetails from './pages/ReportDetails';
+import Settings from './pages/Settings';
 
 function App() {
     return (
         <AuthProvider>
             <Router>
-                <div className="min-h-screen flex flex-col bg-slate-50">
+                <div className="min-h-screen flex flex-col">
                     <Navbar />
                     <main className="flex-grow container mx-auto px-4 py-8">
                         <Routes>
@@ -24,6 +25,7 @@ function App() {
                             <Route path="/report" element={<Report />} />
                             <Route path="/emergency" element={<Emergency />} />
                             <Route path="/safety" element={<Safety />} />
+                            <Route path="/settings" element={<Settings />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/signup" element={<Signup />} />
                             <Route path="/admin" element={<AdminPanel />} />

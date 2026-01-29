@@ -7,31 +7,31 @@ const Report = () => {
     const { user } = useAuth();
 
     return (
-        <div className="space-y-8 max-w-4xl mx-auto">
+        <div className="space-y-8 max-w-4xl mx-auto animate-fade-in-up">
             <div className="text-center">
-                <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Citizen Reporting</h1>
-                <p className="text-slate-600 mt-3 text-lg">Help us track disasters by reporting incidents in your area.</p>
+                <h1 className="text-4xl font-black text-white tracking-tight">Citizen Reporting</h1>
+                <p className="text-slate-400 mt-3 text-lg">Help us track disasters by reporting incidents in your area.</p>
             </div>
 
             {!user ? (
-                <div className="bg-white p-12 rounded-3xl shadow-xl border border-slate-100 text-center space-y-6">
-                    <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto text-red-600">
-                        <LogIn size={40} />
+                <div className="glass-panel p-12 rounded-[2.5rem] text-center space-y-8 border border-slate-800">
+                    <div className="w-24 h-24 bg-red-500/10 rounded-full flex items-center justify-center mx-auto text-red-500 border border-red-500/20 shadow-lg shadow-red-900/20">
+                        <LogIn size={48} />
                     </div>
                     <div className="max-w-md mx-auto">
-                        <h2 className="text-2xl font-bold text-slate-800">Account Required</h2>
-                        <p className="text-slate-600 mt-2">To ensure the accuracy of our data, you must be logged in to submit a disaster report.</p>
+                        <h2 className="text-3xl font-bold text-white">Account Required</h2>
+                        <p className="text-slate-400 mt-4 text-lg leading-relaxed">To ensure the accuracy of our data and prevent spam, you must be logged in to submit a disaster report.</p>
                     </div>
                     <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
                         <Link
                             to="/login"
-                            className="bg-red-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg shadow-red-100"
+                            className="bg-red-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-red-500 transition-all shadow-lg shadow-red-900/30 text-lg"
                         >
                             Login Now
                         </Link>
                         <Link
                             to="/signup"
-                            className="bg-white text-slate-700 border border-slate-200 px-8 py-3 rounded-xl font-bold hover:bg-slate-50 transition-all"
+                            className="bg-slate-800 text-slate-300 border border-slate-700 px-8 py-4 rounded-xl font-bold hover:bg-slate-700 hover:text-white transition-all text-lg"
                         >
                             Create Account
                         </Link>

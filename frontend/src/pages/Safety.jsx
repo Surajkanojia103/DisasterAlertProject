@@ -83,25 +83,32 @@ const Safety = () => {
     ];
 
     return (
-        <div className="space-y-8">
-            <div className="text-center">
-                <h1 className="text-3xl font-bold text-slate-800">Safety Instructions</h1>
-                <p className="text-slate-600 mt-2">Guidelines to keep you safe during disasters.</p>
+        <div className="space-y-12 animate-fade-in-up">
+            <div className="text-center max-w-3xl mx-auto">
+                <div className="inline-flex items-center justify-center p-3 bg-teal-500/10 text-teal-500 rounded-2xl mb-6 border border-teal-500/20">
+                    <Shield size={32} />
+                </div>
+                <h1 className="text-4xl font-black text-white tracking-tight">Safety Instructions</h1>
+                <p className="text-slate-400 mt-4 text-lg">Comprehensive guidelines to keep you and your loved ones safe during various disaster scenarios.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {guides.map((guide, index) => (
-                    <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
-                        <div className="p-6 border-b border-slate-100 flex items-center space-x-3">
-                            <guide.icon className={guide.color} size={28} />
-                            <h3 className="text-xl font-bold text-slate-800">{guide.title}</h3>
+                    <div key={index} className="bg-slate-900/50 backdrop-blur-sm rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-800 overflow-hidden group">
+                        <div className="p-8 border-b border-slate-800 flex items-center space-x-4 bg-slate-950/30">
+                            <div className={`p-3 rounded-xl bg-slate-900 shadow-sm border border-slate-700 ${guide.color}`}>
+                                <guide.icon size={28} />
+                            </div>
+                            <h3 className="text-xl font-bold text-slate-200">{guide.title}</h3>
                         </div>
-                        <div className="p-6">
-                            <ul className="space-y-3">
+                        <div className="p-8">
+                            <ul className="space-y-4">
                                 {guide.steps.map((step, idx) => (
-                                    <li key={idx} className="flex items-start">
-                                        <Shield size={16} className="text-green-500 mt-1 mr-2 flex-shrink-0" />
-                                        <span className="text-slate-600">{step}</span>
+                                    <li key={idx} className="flex items-start group/item">
+                                        <div className="mt-1 mr-3 flex-shrink-0 w-5 h-5 rounded-full bg-green-500/10 flex items-center justify-center text-green-500 group-hover/item:bg-green-500 group-hover/item:text-white transition-colors border border-green-500/20">
+                                            <Shield size={10} />
+                                        </div>
+                                        <span className="text-slate-400 font-medium leading-relaxed group-hover/item:text-slate-300 transition-colors">{step}</span>
                                     </li>
                                 ))}
                             </ul>
@@ -111,37 +118,41 @@ const Safety = () => {
             </div>
 
             {/* Safety Kit Checklist Section */}
-            <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 mt-12">
-                <div className="flex items-center mb-6">
-                    <div className="bg-red-100 p-3 rounded-full text-red-600 mr-4">
-                        <Briefcase size={32} />
-                    </div>
-                    <div>
-                        <h2 className="text-2xl font-bold text-slate-800">Emergency Survival Kit</h2>
-                        <p className="text-slate-500">Essential items to keep packed and ready at all times.</p>
-                    </div>
-                </div>
+            <div className="bg-slate-900/80 rounded-[2.5rem] shadow-xl border border-slate-800 p-8 md:p-12 mt-16 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-orange-600 rounded-full opacity-10 blur-[80px] -mr-20 -mt-20"></div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {[
-                        "Water (one gallon per person per day)",
-                        "Non-perishable food (3-day supply)",
-                        "Battery-powered or hand-crank radio",
-                        "Flashlight with extra batteries",
-                        "First aid kit",
-                        "Whistle (to signal for help)",
-                        "Dust mask (to help filter contaminated air)",
-                        "Moist towelettes, garbage bags for sanitation",
-                        "Wrench or pliers (to turn off utilities)",
-                        "Manual can opener for food",
-                        "Local maps",
-                        "Cell phone with chargers and a backup battery"
-                    ].map((item, index) => (
-                        <div key={index} className="flex items-center p-3 bg-slate-50 rounded-lg border border-slate-100">
-                            <div className="w-5 h-5 rounded border-2 border-slate-300 mr-3 flex-shrink-0"></div>
-                            <span className="text-slate-700 font-medium">{item}</span>
+                <div className="relative z-10">
+                    <div className="flex flex-col md:flex-row items-start md:items-center mb-10 gap-6">
+                        <div className="bg-red-500/10 p-5 rounded-3xl text-red-500 shadow-sm border border-red-500/20">
+                            <Briefcase size={40} />
                         </div>
-                    ))}
+                        <div>
+                            <h2 className="text-3xl font-black text-white">Emergency Survival Kit</h2>
+                            <p className="text-slate-400 text-lg mt-2">Essential items to keep packed and ready at all times.</p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+                        {[
+                            "Water (one gallon per person per day)",
+                            "Non-perishable food (3-day supply)",
+                            "Battery-powered or hand-crank radio",
+                            "Flashlight with extra batteries",
+                            "First aid kit",
+                            "Whistle (to signal for help)",
+                            "Dust mask (to help filter contaminated air)",
+                            "Moist towelettes, garbage bags for sanitation",
+                            "Wrench or pliers (to turn off utilities)",
+                            "Manual can opener for food",
+                            "Local maps",
+                            "Cell phone with chargers and a backup battery"
+                        ].map((item, index) => (
+                            <div key={index} className="flex items-center group">
+                                <div className="w-2 h-2 rounded-full bg-red-500 mr-4 flex-shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+                                <span className="text-slate-300 font-medium text-lg group-hover:text-white transition-colors border-b border-transparent group-hover:border-red-500/30 pb-0.5">{item}</span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
