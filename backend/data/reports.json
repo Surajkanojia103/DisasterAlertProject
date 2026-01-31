@@ -1,0 +1,16 @@
+[
+  {
+    "_id": "local-1769843342964x5j38lauu",
+    "userId": "9g5lrb",
+    "userName": "john",
+    "disasterType": "Cyclone",
+    "location": "19.064422, 72.997274",
+    "description": " kjshcshfuhdsc,aclasucygasc",
+    "severity": "Medium",
+    "contact": "1234567890",
+    "affected": "5",
+    "needs": "food",
+    "status": "Pending",
+    "timestamp": "2026-01-31T07:09:02.964Z"
+  }
+]
