@@ -30,32 +30,30 @@ const Navbar = () => {
                         </div>
                     </Link>
 
-                    <div className="hidden md:flex items-center bg-[#0f172a] p-2 rounded-[2rem] border border-slate-800/50 shadow-inner gap-1">
-                        {user && (
-                            <>
-                                <NavLink to="/alerts" className={navLinkClasses}>
-                                    <AlertTriangle size={18} strokeWidth={2.5} />
-                                    <span>Alerts</span>
-                                </NavLink>
-                                <NavLink to="/report" className={navLinkClasses}>
-                                    <FileText size={18} strokeWidth={2.5} />
-                                    <span>Report</span>
-                                </NavLink>
-                                <NavLink to="/emergency" className={navLinkClasses}>
-                                    <Phone size={18} strokeWidth={2.5} />
-                                    <span>Emergency</span>
-                                </NavLink>
-                                <NavLink to="/safety" className={navLinkClasses}>
-                                    <Shield size={18} strokeWidth={2.5} />
-                                    <span>Safety</span>
-                                </NavLink>
-                                <NavLink to="/settings" className={navLinkClasses}>
-                                    <Settings size={18} strokeWidth={2.5} />
-                                    <span>Settings</span>
-                                </NavLink>
-                            </>
-                        )}
-                    </div>
+                    {user && (
+                        <div className="hidden md:flex items-center bg-[#0f172a] p-2 rounded-[2rem] border border-slate-800/50 shadow-inner gap-1">
+                            <NavLink to="/alerts" className={navLinkClasses}>
+                                <AlertTriangle size={18} strokeWidth={2.5} />
+                                <span>Alerts</span>
+                            </NavLink>
+                            <NavLink to="/report" className={navLinkClasses}>
+                                <FileText size={18} strokeWidth={2.5} />
+                                <span>Report</span>
+                            </NavLink>
+                            <NavLink to="/emergency" className={navLinkClasses}>
+                                <Phone size={18} strokeWidth={2.5} />
+                                <span>Emergency</span>
+                            </NavLink>
+                            <NavLink to="/safety" className={navLinkClasses}>
+                                <Shield size={18} strokeWidth={2.5} />
+                                <span>Safety</span>
+                            </NavLink>
+                            <NavLink to="/settings" className={navLinkClasses}>
+                                <Settings size={18} strokeWidth={2.5} />
+                                <span>Settings</span>
+                            </NavLink>
+                        </div>
+                    )}
 
                     <div className="flex items-center gap-4">
                         {user ? (
@@ -82,7 +80,7 @@ const Navbar = () => {
                         ) : (
                             <Link to="/login" className="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-2xl font-bold transition-all shadow-lg shadow-indigo-500/30 hover:-translate-y-0.5">
                                 <LogIn size={18} />
-                                <span>Access System</span>
+                                <span>Login</span>
                             </Link>
                         )}
                     </div>

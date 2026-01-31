@@ -43,7 +43,17 @@ router.post('/signup', async (req, res) => {
                 { expiresIn: '24h' },
                 (err, token) => {
                     if (err) throw err;
-                    res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+                    res.json({
+                        token,
+                        user: {
+                            id: user.id,
+                            name: user.name,
+                            email: user.email,
+                            role: user.role,
+                            gender: user.gender,
+                            contact: user.contact
+                        }
+                    });
                 }
             );
         } catch (dbError) {
@@ -132,7 +142,17 @@ router.post('/login', async (req, res) => {
                 { expiresIn: '24h' },
                 (err, token) => {
                     if (err) throw err;
-                    res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+                    res.json({
+                        token,
+                        user: {
+                            id: user.id,
+                            name: user.name,
+                            email: user.email,
+                            role: user.role,
+                            gender: user.gender,
+                            contact: user.contact
+                        }
+                    });
                 }
             );
         } catch (dbError) {
@@ -163,6 +183,50 @@ router.post('/login', async (req, res) => {
             );
             return;
         }
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// Middleware to verify token (Inline for now to ensure self-containment)
+const auth = (req, res, next) => {
+    const token = req.header('x-auth-token');
+    if (!token) return res.status(401).json({ message: 'No token, authorization denied' });
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded.user;
+        next();
+    } catch (err) {
+        res.status(401).json({ message: 'Token is not valid' });
+    }
+};
+
+// Update Profile
+router.put('/profile', auth, async (req, res) => {
+    try {
+        const { name, gender, contact } = req.body;
+
+        let user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        if (name) user.name = name;
+        if (gender) user.gender = gender;
+        if (contact) user.contact = contact;
+
+        await user.save();
+
+        res.json({
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                gender: user.gender,
+                contact: user.contact
+            }
+        });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');

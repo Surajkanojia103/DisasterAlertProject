@@ -1,8 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { Settings as SettingsIcon, Shield, User, Smartphone, Moon } from 'lucide-react';
 
 const Settings = () => {
+    const { user } = useAuth();
     const [isPasswordEditing, setIsPasswordEditing] = useState(false);
+    const [isProfileEditing, setIsProfileEditing] = useState(false);
+
+    // Profile Data State
+    const [profileData, setProfileData] = useState({
+        name: user?.name || '',
+        gender: user?.gender || '',
+        contact: user?.contact || ''
+    });
+
+    // Password State
     const [passwords, setPasswords] = useState({
         current: '',
         new: '',
@@ -11,11 +25,47 @@ const Settings = () => {
     const [message, setMessage] = useState({ type: '', text: '' });
     const [loading, setLoading] = useState(false);
 
+    // Initialize profile data (and update if user changes)
+    useEffect(() => {
+        if (user) {
+            setProfileData({
+                name: user.name || '',
+                gender: user.gender || 'Prefer not to say',
+                contact: user.contact || ''
+            });
+        }
+    }, [user]);
+
     const handlePasswordChange = (e) => {
         setPasswords({ ...passwords, [e.target.name]: e.target.value });
     };
 
+    const handleProfileUpdate = async (e) => {
+        e.preventDefault();
+        try {
+            const token = localStorage.getItem('token');
+            const config = {
+                headers: {
+                    'x-auth-token': token
+                }
+            };
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+            // Use axios directly, ensure it is imported
+            const res = await axios.put(`${API_URL}/auth/profile`, profileData, config);
+
+            // Update localStorage and reload to refresh context
+            localStorage.setItem('dars_user', JSON.stringify(res.data.user));
+            window.location.reload();
+
+            setIsProfileEditing(false);
+        } catch (err) {
+            console.error("Error updating profile:", err);
+            setMessage({ type: 'error', text: 'Failed to update profile.' });
+        }
+    };
+
     const handlePasswordUpdate = async () => {
+        // ... (existing implementation)
         setMessage({ type: '', text: '' });
 
         if (!passwords.current || !passwords.new || !passwords.confirm) {
@@ -68,15 +118,94 @@ const Settings = () => {
                         Account
                     </h2>
                     <div className="space-y-4">
-                        <div className="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl border border-slate-800/50">
-                            <div>
-                                <h3 className="text-white font-medium">Profile Information</h3>
-                                <p className="text-sm text-slate-400">Update your name and contact details</p>
+                        {/* Profile Information Section */}
+                        <div className="bg-slate-950/50 rounded-xl border border-slate-800/50 overflow-hidden transition-all duration-300">
+                            <div className="flex items-center justify-between p-4">
+                                <div>
+                                    <h3 className="text-white font-medium">Profile Information</h3>
+                                    <p className="text-sm text-slate-400">Update your name and contact details</p>
+                                </div>
+                                <button
+                                    onClick={() => setIsProfileEditing(!isProfileEditing)}
+                                    className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm font-bold transition-colors"
+                                >
+                                    {isProfileEditing ? 'Cancel' : 'Edit'}
+                                </button>
                             </div>
-                            <button className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm font-bold transition-colors">
-                                Edit
-                            </button>
+
+                            {/* Collapsible Content */}
+                            <div className={`border-t border-slate-800/50 transition-all duration-300 ${isProfileEditing || !isProfileEditing ? 'block' : 'hidden'}`}>
+                                <div className="p-4 space-y-4">
+                                    {!isProfileEditing ? (
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div className="bg-slate-900 p-3 rounded-lg border border-slate-800">
+                                                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Name</span>
+                                                <span className="text-white font-medium">{user?.name}</span>
+                                            </div>
+                                            <div className="bg-slate-900 p-3 rounded-lg border border-slate-800">
+                                                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Email</span>
+                                                <span className="text-slate-300 font-medium">{user?.email}</span>
+                                            </div>
+                                            <div className="bg-slate-900 p-3 rounded-lg border border-slate-800">
+                                                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Contact</span>
+                                                <span className="text-white font-medium">{user?.contact || 'Not set'}</span>
+                                            </div>
+                                            <div className="bg-slate-900 p-3 rounded-lg border border-slate-800">
+                                                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Gender</span>
+                                                <span className="text-white font-medium">{user?.gender || 'Not set'}</span>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <form onSubmit={handleProfileUpdate} className="space-y-4 animate-fade-in-down">
+                                            <div>
+                                                <label className="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">Name</label>
+                                                <input
+                                                    type="text"
+                                                    value={profileData.name}
+                                                    onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                                                    className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-indigo-500 transition-colors"
+                                                />
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">Gender</label>
+                                                    <select
+                                                        value={profileData.gender}
+                                                        onChange={(e) => setProfileData({ ...profileData, gender: e.target.value })}
+                                                        className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-indigo-500 transition-colors appearance-none"
+                                                    >
+                                                        <option value="Prefer not to say">Prefer not to say</option>
+                                                        <option value="Male">Male</option>
+                                                        <option value="Female">Female</option>
+                                                        <option value="Other">Other</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">Contact</label>
+                                                    <input
+                                                        type="text"
+                                                        value={profileData.contact}
+                                                        onChange={(e) => setProfileData({ ...profileData, contact: e.target.value })}
+                                                        className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-indigo-500 transition-colors"
+                                                        placeholder="+1 234 567 890"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-end pt-2">
+                                                <button
+                                                    type="submit"
+                                                    className="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-bold transition-colors shadow-lg shadow-indigo-500/20"
+                                                >
+                                                    Save Changes
+                                                </button>
+                                            </div>
+                                        </form>
+                                    )}
+                                </div>
+                            </div>
                         </div>
+
+                        {/* Password Section (Unchanged) */}
                         <div className="bg-slate-950/50 rounded-xl border border-slate-800/50 overflow-hidden transition-all duration-300">
                             <div className="flex items-center justify-between p-4">
                                 <div>

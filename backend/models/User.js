@@ -19,6 +19,15 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
+    gender: {
+        type: String,
+        enum: ['Male', 'Female', 'Other', 'Prefer not to say'],
+        default: 'Prefer not to say'
+    },
+    contact: {
+        type: String,
+        default: ''
+    },
     createdAt: {
         type: Date,
         default: Date.now
