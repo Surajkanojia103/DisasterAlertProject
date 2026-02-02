@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogIn, AlertTriangle } from 'lucide-react';
+import { User, Lock } from 'lucide-react';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [isLoggingIn, setIsLoggingIn] = useState(false);
     const { login } = useAuth();
@@ -35,81 +36,116 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center px-4">
-            <div className="max-w-md w-full glass-panel p-10 rounded-[2rem] animate-fade-in-up">
-                <div className="flex justify-center mb-8">
-                    <div className="bg-red-500/10 p-4 rounded-2xl text-red-500 shadow-inner border border-red-500/20">
-                        <AlertTriangle size={40} />
-                    </div>
-                </div>
+        <div className="min-h-screen bg-[#1E202E] flex items-center justify-center p-4 font-sans text-white relative overflow-hidden">
 
-                <div className="text-center mb-10">
-                    <h2 className="text-3xl font-black text-white tracking-tight">Welcome Back</h2>
-                    <p className="text-slate-400 mt-2 font-medium">Sign in to access the command center</p>
-                </div>
+            {/* Static Background Image */}
+            <div className="absolute inset-0 z-0">
+                <img
+                    src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80"
+                    alt="Background"
+                    className="w-full h-full object-cover opacity-40"
+                />
+                {/* Overlay to ensure readability */}
+                <div className="absolute inset-0 bg-[#1E202E]/70 mix-blend-multiply"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1E202E]/50 to-[#1E202E]"></div>
+            </div>
 
-                {error && (
-                    <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mb-6 text-sm font-bold flex items-center">
-                        <AlertTriangle size={16} className="mr-2 shrink-0" />
-                        {error}
-                    </div>
-                )}
+            {/* Background Blob Effects (Static) */}
+            <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-[#FF3B60]/20 rounded-full blur-[120px] pointer-events-none z-0"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[120px] pointer-events-none z-0"></div>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
-                    <div>
-                        <label className="block text-xs font-bold text-slate-400 mb-2 ml-1 uppercase tracking-wider">Email Address</label>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-5 py-3 bg-slate-950/50 border border-slate-700 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all placeholder:text-slate-600 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                            placeholder="name@example.com"
-                            required
-                            disabled={isLoggingIn}
-                        />
+            <div className="w-full max-w-[440px] relative z-10">
+                {/* Glass Card Container */}
+                <div className="bg-[#242736]/60 backdrop-blur-xl border border-slate-700/50 rounded-[2.5rem] p-12 shadow-[0_0_40px_-5px_rgba(0,0,0,0.3)] relative">
+
+                    {/* Header */}
+                    <div className="mb-12 text-center">
+                        <h1 className="text-3xl font-black text-white tracking-wider uppercase relative inline-block">
+                            Log In
+                            <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-12 h-1 bg-[#FF3B60] rounded-full shadow-[0_0_10px_#FF3B60]"></span>
+                        </h1>
                     </div>
-                    <div>
-                        <div className="flex justify-between items-center mb-2 ml-1">
-                            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">Password</label>
-                            <a href="#" className="text-xs text-red-400 hover:text-red-300 font-bold transition-colors">Forgot Password?</a>
+
+                    {/* Error Message */}
+                    {error && (
+                        <div className="bg-red-500/10 border border-[#FF3B60] text-[#FF3B60] p-3 rounded-xl text-xs font-medium text-center mb-6">
+                            {error}
                         </div>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-5 py-3 bg-slate-950/50 border border-slate-700 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all placeholder:text-slate-600 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                            placeholder="••••••••"
-                            required
+                    )}
+
+                    {/* Form */}
+                    <form onSubmit={handleSubmit} className="space-y-8">
+
+                        {/* Username/Email Input */}
+                        <div className="relative group">
+                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#FF3B60] transition-colors">
+                                <User size={20} />
+                            </div>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full bg-[#1E202E] border border-slate-600 focus:border-[#FF3B60] rounded-2xl py-4 pl-12 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none transition-all shadow-inner focus:shadow-[0_0_15px_rgba(255,59,96,0.15)]"
+                                placeholder="Username"
+                                required
+                                disabled={isLoggingIn}
+                            />
+                        </div>
+
+                        {/* Password Input */}
+                        <div className="relative group">
+                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#FF3B60] transition-colors">
+                                <Lock size={20} />
+                            </div>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full bg-[#1E202E] border border-slate-600 focus:border-[#FF3B60] rounded-2xl py-4 pl-12 pr-16 text-sm text-white placeholder-slate-500 focus:outline-none transition-all shadow-inner focus:shadow-[0_0_15px_rgba(255,59,96,0.15)]"
+                                placeholder="Password"
+                                required
+                                disabled={isLoggingIn}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors"
+                            >
+                                {showPassword ? "Hide" : "Show"}
+                            </button>
+                        </div>
+
+                        {/* Options Row */}
+                        <div className="flex items-center justify-between text-xs px-1">
+                            <label className="flex items-center space-x-2 cursor-pointer group">
+                                <input
+                                    type="checkbox"
+                                    className="w-4 h-4 rounded border-slate-600 bg-transparent text-[#FF3B60] focus:ring-[#FF3B60] focus:ring-offset-0 focus:ring-offset-transparent cursor-pointer"
+                                />
+                                <span className="text-slate-400 group-hover:text-white transition-colors">Remember me</span>
+                            </label>
+                            <a href="#" className="text-[#FF3B60] hover:text-[#FF204E] font-medium transition-colors hover:underline decoration-[#FF3B60]/30 underline-offset-4">Forgot Password?</a>
+                        </div>
+
+                        {/* Login Button */}
+                        <button
+                            type="submit"
                             disabled={isLoggingIn}
-                        />
+                            className="w-full bg-gradient-to-r from-[#FF3B60] to-[#FF204E] hover:from-[#FF204E] hover:to-[#FF0F3E] text-white py-4 rounded-2xl font-bold text-lg shadow-[0_8px_25px_-5px_rgba(255,59,96,0.5)] transition-all transform hover:-translate-y-1 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed mt-2 relative overflow-hidden"
+                        >
+                            <span className="relative z-10">{isLoggingIn ? 'Logging in...' : 'Log In'}</span>
+                        </button>
+                    </form>
+
+                    {/* Footer */}
+                    <div className="text-center pt-8 border-t border-slate-700/50 mt-8">
+                        <p className="text-slate-400 text-sm">
+                            Don't have an account?{' '}
+                            <Link to="/signup" className="text-[#FF3B60] font-bold hover:text-white transition-colors">
+                                Sign up
+                            </Link>
+                        </p>
                     </div>
-
-                    <button
-                        type="submit"
-                        disabled={isLoggingIn}
-                        className="w-full bg-red-600 text-white py-4 rounded-xl hover:bg-red-500 transition-all shadow-lg shadow-red-900/20 flex items-center justify-center space-x-2 font-bold text-lg group disabled:opacity-70 disabled:cursor-not-allowed"
-                    >
-                        {isLoggingIn ? (
-                            <>
-                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                <span>Signing In...</span>
-                            </>
-                        ) : (
-                            <>
-                                <LogIn size={22} className="group-hover:translate-x-1 transition-transform" />
-                                <span>Sign In</span>
-                            </>
-                        )}
-                    </button>
-                </form>
-
-                <div className="mt-8 pt-8 border-t border-slate-800 text-center">
-                    <p className="text-slate-500 font-medium">
-                        Don't have an account?{' '}
-                        <Link to="/signup" className="text-red-400 font-bold hover:text-red-300 transition-colors hover:underline">
-                            Create Account
-                        </Link>
-                    </p>
                 </div>
             </div>
         </div>
