@@ -72,29 +72,33 @@ router.post('/login', async (req, res) => {
         const { email, password } = req.body;
 
         // Hardcoded Admin Login (Bypass DB for reliability during demo)
-        if ((email === 'admin@123' || email === 'admin@123.com') && password === '12345678') {
-            const payload = {
-                user: {
-                    id: 'admin-id',
-                    name: 'Administrator',
-                    email: 'admin@123',
-                    role: 'admin'
-                }
-            };
+        if (email === 'admin@123' || email === 'admin@123.com') {
+            if (password === '12345678') {
+                const payload = {
+                    user: {
+                        id: 'admin-id',
+                        name: 'Administrator',
+                        email: 'admin@123',
+                        role: 'admin'
+                    }
+                };
 
-            jwt.sign(
-                payload,
-                process.env.JWT_SECRET,
-                { expiresIn: '24h' },
-                (err, token) => {
-                    if (err) throw err;
-                    return res.json({
-                        token,
-                        user: { id: 'admin-id', name: 'Administrator', email: 'admin@123', role: 'admin' }
-                    });
-                }
-            );
-            return; // Stop execution here
+                jwt.sign(
+                    payload,
+                    process.env.JWT_SECRET,
+                    { expiresIn: '24h' },
+                    (err, token) => {
+                        if (err) throw err;
+                        return res.json({
+                            token,
+                            user: { id: 'admin-id', name: 'Administrator', email: 'admin@123', role: 'admin' }
+                        });
+                    }
+                );
+                return; // Stop execution here
+            } else {
+                return res.status(400).json({ message: 'Invalid Admin Credentials' });
+            }
         }
 
         // Regular User Login
