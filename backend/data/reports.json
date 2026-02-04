@@ -38,7 +38,7 @@
     "contact": "8765432109",
     "affected": "75",
     "needs": "Shelter, Medical aid, Rescue equipment",
-    "status": "Pending",
+    "status": "Rejected",
     "timestamp": "2026-02-04T13:55:45.556Z"
   },
   {
@@ -52,7 +52,7 @@
     "contact": "9876543218",
     "affected": "30",
     "needs": "Fire extinguishing equipment, Water tankers",
-    "status": "Pending",
+    "status": "Verified",
     "timestamp": "2026-02-04T13:58:12.974Z"
   },
   {
@@ -66,7 +66,7 @@
     "contact": "9876543217",
     "affected": "45",
     "needs": "Heavy machinery, Rocks removal equipment",
-    "status": "Pending",
+    "status": "Verified",
     "timestamp": "2026-02-04T14:00:59.785Z"
   }
 ]

@@ -58,27 +58,7 @@ router.post('/signup', async (req, res) => {
             );
         } catch (dbError) {
             console.error("Database Error during signup:", dbError.message);
-            // Fallback for demo: Allow signup to "succeed" but return a mock token/user
-            // This allows the UI to proceed even if DB is broken
-            const mockId = Math.random().toString(36).substring(7);
-            const payload = {
-                user: {
-                    id: mockId,
-                    name: name,
-                    email: email,
-                    role: 'user'
-                }
-            };
-
-            jwt.sign(
-                payload,
-                process.env.JWT_SECRET,
-                { expiresIn: '24h' },
-                (err, token) => {
-                    if (err) throw err;
-                    res.json({ token, user: { id: mockId, name: name, email: email, role: 'user' } });
-                }
-            );
+            res.status(500).json({ message: 'Server Error during signup. Database might be unavailable.' });
         }
     } catch (err) {
         console.error(err.message);
@@ -157,31 +137,7 @@ router.post('/login', async (req, res) => {
             );
         } catch (dbError) {
             console.error("Database Error during login:", dbError.message);
-            // Fallback for demo if DB is down
-            // Allow ANY user to login if DB is broken for demo purposes
-            // In a real app, this is a security risk, but for a prototype without a stable DB, it ensures usability.
-            const mockId = Math.random().toString(36).substring(7);
-            const payload = {
-                user: {
-                    id: mockId,
-                    name: 'Demo User',
-                    email: email,
-                    role: 'user'
-                }
-            };
-            jwt.sign(
-                payload,
-                process.env.JWT_SECRET,
-                { expiresIn: '24h' },
-                (err, token) => {
-                    if (err) throw err;
-                    return res.json({
-                        token,
-                        user: { id: mockId, name: 'Demo User', email: email, role: 'user' }
-                    });
-                }
-            );
-            return;
+            res.status(500).json({ message: 'Server Error during login. Database might be unavailable.' });
         }
     } catch (err) {
         console.error(err.message);
