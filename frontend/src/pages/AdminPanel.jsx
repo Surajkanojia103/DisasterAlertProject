@@ -43,19 +43,17 @@ const AdminPanel = () => {
                     setReports(res.data.reports);
                     setTotalPages(res.data.totalPages);
 
-                    // For stats, we might need a separate endpoint or just show stats for loaded data
-                    // Ideally, backend provides stats. For now, we'll estimate from page or keep existing logic if it returned all.
-                    // Since we changed the endpoint to paginate, we can't calculate TOTAL stats from one page.
-                    // We will just calculate stats for the *current view* or if the backend provided total counts (it provided totalReports but not breakdown).
-                    // For this iteration, let's just count from the current page to avoid breaking the UI, 
-                    // or better, assuming the backend *could* return stats (but it currently doesn't breakdown).
-
-                    const newStats = res.data.reports.reduce((acc, report) => {
-                        acc.total++;
-                        acc[report.status.toLowerCase()]++;
-                        return acc;
-                    }, { total: 0, pending: 0, verified: 0, rejected: 0 });
-                    setStats(newStats);
+                    if (res.data.stats) {
+                        setStats(res.data.stats);
+                    } else {
+                        // Fallback if stats not provided (older backend?)
+                        const newStats = res.data.reports.reduce((acc, report) => {
+                            acc.total++;
+                            acc[report.status.toLowerCase()]++;
+                            return acc;
+                        }, { total: 0, pending: 0, verified: 0, rejected: 0 });
+                        setStats(newStats);
+                    }
                 } else {
                     // Fallback for older non-paginated API or local handling
                     setReports(res.data);
@@ -141,7 +139,7 @@ const AdminPanel = () => {
             {/* Stats Grid - Note: Shows stats for current page only in this version */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm">
-                    <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Page Reports</p>
+                    <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Reports</p>
                     <p className="text-3xl font-black text-white mt-1">{stats.total}</p>
                 </div>
                 <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm">

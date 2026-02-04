@@ -55,12 +55,21 @@ router.get('/', async (req, res) => {
                 .limit(limit);
 
             const total = await Report.countDocuments();
+            const pending = await Report.countDocuments({ status: 'Pending' });
+            const verified = await Report.countDocuments({ status: 'Verified' });
+            const rejected = await Report.countDocuments({ status: 'Rejected' });
 
             return res.json({
                 reports,
                 currentPage: page,
                 totalPages: Math.ceil(total / limit),
-                totalReports: total
+                totalReports: total,
+                stats: {
+                    total,
+                    pending,
+                    verified,
+                    rejected
+                }
             });
         } catch (err) {
             console.error("Database Error fetching reports:", err.message);
@@ -72,6 +81,13 @@ router.get('/', async (req, res) => {
     // Sort by date descending
     allReports.sort((a, b) => new Date(b.timestamp || b.date) - new Date(a.timestamp || a.date));
 
+    // Calculate stats from all reports
+    const stats = allReports.reduce((acc, report) => {
+        acc.total++;
+        acc[report.status.toLowerCase()]++;
+        return acc;
+    }, { total: 0, pending: 0, verified: 0, rejected: 0 });
+
     const startIndex = skip;
     const endIndex = page * limit;
     const paginatedReports = allReports.slice(startIndex, endIndex);
@@ -80,7 +96,8 @@ router.get('/', async (req, res) => {
         reports: paginatedReports,
         currentPage: page,
         totalPages: Math.ceil(allReports.length / limit),
-        totalReports: allReports.length
+        totalReports: allReports.length,
+        stats
     });
 });
 
