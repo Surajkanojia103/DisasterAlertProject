@@ -41,22 +41,47 @@ const auth = require('../middleware/auth');
 
 const isDbConnected = () => mongoose.connection.readyState === 1;
 
-// Get all reports
+// Get all reports with Pagination
 router.get('/', async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
     if (isDbConnected()) {
         try {
-            const reports = await Report.find().sort({ timestamp: -1 });
-            return res.json(reports);
+            const reports = await Report.find()
+                .sort({ timestamp: -1 })
+                .skip(skip)
+                .limit(limit);
+
+            const total = await Report.countDocuments();
+
+            return res.json({
+                reports,
+                currentPage: page,
+                totalPages: Math.ceil(total / limit),
+                totalReports: total
+            });
         } catch (err) {
             console.error("Database Error fetching reports:", err.message);
         }
     }
 
     console.log("Using file storage for GET /");
-    const reports = readLocalReports();
+    const allReports = readLocalReports();
     // Sort by date descending
-    reports.sort((a, b) => new Date(b.timestamp || b.date) - new Date(a.timestamp || a.date));
-    res.json(reports);
+    allReports.sort((a, b) => new Date(b.timestamp || b.date) - new Date(a.timestamp || a.date));
+
+    const startIndex = skip;
+    const endIndex = page * limit;
+    const paginatedReports = allReports.slice(startIndex, endIndex);
+
+    res.json({
+        reports: paginatedReports,
+        currentPage: page,
+        totalPages: Math.ceil(allReports.length / limit),
+        totalReports: allReports.length
+    });
 });
 
 // Get user's reports

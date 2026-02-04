@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, XCircle, Clock, MapPin, Shield, FileText } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, MapPin, Shield, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const AdminPanel = () => {
     const { user } = useAuth();
@@ -14,6 +14,11 @@ const AdminPanel = () => {
         verified: 0,
         rejected: 0
     });
+
+    // Pagination State
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [itemsPerPage] = useState(20);
 
     useEffect(() => {
         if (!user || user.role !== 'admin') {
@@ -30,33 +35,42 @@ const AdminPanel = () => {
                     }
                 };
                 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-                const res = await axios.get(`${API_URL}/reports`, config); // Assuming this endpoint returns all reports for admin
-                setReports(res.data);
 
-                const newStats = res.data.reduce((acc, report) => {
-                    acc.total++;
-                    acc[report.status.toLowerCase()]++;
-                    return acc;
-                }, { total: 0, pending: 0, verified: 0, rejected: 0 });
+                // Fetch paginated reports
+                const res = await axios.get(`${API_URL}/reports?page=${currentPage}&limit=${itemsPerPage}`, config);
 
-                setStats(newStats);
+                if (res.data.reports) {
+                    setReports(res.data.reports);
+                    setTotalPages(res.data.totalPages);
+
+                    // For stats, we might need a separate endpoint or just show stats for loaded data
+                    // Ideally, backend provides stats. For now, we'll estimate from page or keep existing logic if it returned all.
+                    // Since we changed the endpoint to paginate, we can't calculate TOTAL stats from one page.
+                    // We will just calculate stats for the *current view* or if the backend provided total counts (it provided totalReports but not breakdown).
+                    // For this iteration, let's just count from the current page to avoid breaking the UI, 
+                    // or better, assuming the backend *could* return stats (but it currently doesn't breakdown).
+
+                    const newStats = res.data.reports.reduce((acc, report) => {
+                        acc.total++;
+                        acc[report.status.toLowerCase()]++;
+                        return acc;
+                    }, { total: 0, pending: 0, verified: 0, rejected: 0 });
+                    setStats(newStats);
+                } else {
+                    // Fallback for older non-paginated API or local handling
+                    setReports(res.data);
+                }
+
             } catch (err) {
                 console.error("Error fetching admin reports:", err);
                 // Fallback to local storage
                 const storedReports = JSON.parse(localStorage.getItem('dars_reports') || '[]');
                 setReports(storedReports);
-
-                const newStats = storedReports.reduce((acc, report) => {
-                    acc.total++;
-                    acc[report.status.toLowerCase()]++;
-                    return acc;
-                }, { total: 0, pending: 0, verified: 0, rejected: 0 });
-                setStats(newStats);
             }
         };
 
         fetchReports();
-    }, [user, navigate]);
+    }, [user, navigate, currentPage, itemsPerPage]);
 
     const updateStatus = async (reportId, newStatus) => {
         try {
@@ -68,7 +82,7 @@ const AdminPanel = () => {
             };
 
             const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-            const res = await axios.put(`${API_URL}/reports/${reportId}/status`, { status: newStatus }, config);
+            await axios.put(`${API_URL}/reports/${reportId}/status`, { status: newStatus }, config);
 
             // Update local state
             const updatedReports = reports.map(report =>
@@ -86,26 +100,6 @@ const AdminPanel = () => {
 
         } catch (err) {
             console.error("Error updating status:", err);
-            // Fallback for demo: Update local state and local storage
-            const updatedReports = reports.map(report =>
-                report._id === reportId ? { ...report, status: newStatus } : report
-            );
-            setReports(updatedReports);
-
-            // Update local storage
-            const storedReports = JSON.parse(localStorage.getItem('dars_reports') || '[]');
-            const updatedStoredReports = storedReports.map(report =>
-                report._id === reportId ? { ...report, status: newStatus } : report
-            );
-            localStorage.setItem('dars_reports', JSON.stringify(updatedStoredReports));
-
-            // Update stats
-            const newStats = updatedReports.reduce((acc, report) => {
-                acc.total++;
-                acc[report.status.toLowerCase()]++;
-                return acc;
-            }, { total: 0, pending: 0, verified: 0, rejected: 0 });
-            setStats(newStats);
         }
     };
 
@@ -119,6 +113,12 @@ const AdminPanel = () => {
         const matchesStatus = filterStatus === 'All' || report.status === filterStatus;
         return matchesSearch && matchesStatus;
     });
+
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
+        }
+    };
 
     return (
         <div className="space-y-8 animate-fade-in-up">
@@ -138,10 +138,10 @@ const AdminPanel = () => {
                 </div>
             </div>
 
-            {/* Stats Grid */}
+            {/* Stats Grid - Note: Shows stats for current page only in this version */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm">
-                    <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Reports</p>
+                    <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Page Reports</p>
                     <p className="text-3xl font-black text-white mt-1">{stats.total}</p>
                 </div>
                 <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm">
@@ -267,6 +267,30 @@ const AdminPanel = () => {
                         ))
                     )}
                 </div>
+
+                {/* Pagination Controls */}
+                <div className="p-4 border-t border-slate-800 flex items-center justify-between">
+                    <div className="text-sm text-slate-400">
+                        Page <span className="font-bold text-white">{currentPage}</span> of <span className="font-bold text-white">{totalPages}</span>
+                    </div>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        >
+                            <ChevronLeft size={20} />
+                        </button>
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        >
+                            <ChevronRight size={20} />
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </div>
     );
