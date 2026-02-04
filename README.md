@@ -42,7 +42,7 @@ A comprehensive disaster management platform that provides real-time alerts from
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/YOUR_USERNAME/DisasterAlertProject.git
+git clone https://github.com/Surajkanojia103/DisasterAlertProject.git
 cd DisasterAlertProject
 ```
 
