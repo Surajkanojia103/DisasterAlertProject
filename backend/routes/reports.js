@@ -96,11 +96,28 @@ router.get('/:id', auth, async (req, res) => {
     res.json(report);
 });
 
+const User = require('../models/User');
+
+// ... (existing imports)
+
 // Create a report
 router.post('/', auth, async (req, res) => {
+    let userName = req.body.userName;
+
+    if (isDbConnected()) {
+        try {
+            const user = await User.findById(req.user.id);
+            if (user) {
+                userName = user.name;
+            }
+        } catch (err) {
+            console.error("Error fetching user for report:", err.message);
+        }
+    }
+
     const reportData = {
         userId: req.user.id,
-        userName: req.body.userName,
+        userName: userName || 'Anonymous',
         ...req.body,
         status: 'Pending',
         timestamp: new Date().toISOString()
