@@ -97,7 +97,7 @@ const ReportDetails = () => {
                         <div className="bg-slate-950/50 p-6 rounded-3xl border border-slate-800">
                             <div className="flex items-center text-slate-500 mb-3">
                                 <AlertTriangle size={16} className="mr-2" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Severity</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Danger Level</span>
                             </div>
                             <p className={`text-2xl font-black ${report.severity === 'Critical' ? 'text-red-500' :
                                 report.severity === 'High' ? 'text-orange-500' :

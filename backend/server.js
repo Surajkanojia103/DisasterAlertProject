@@ -36,6 +36,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/reports', require('./routes/reports'));
 app.use('/api/alerts', require('./routes/alerts'));
+app.use('/api/shelters', require('./routes/shelters'));
 
 const PORT = process.env.PORT || 5000;
 

@@ -1,0 +1,39 @@
+[
+  {
+    "id": "local-1770217024734",
+    "name": "suraj",
+    "email": "surajkanojia@1234",
+    "password": "$2a$10$w6tnfOwLBo27OAMR.nn77.WZlheeI/IvF4WvlqvN/RbAXyUv.7CGW",
+    "role": "user",
+    "createdAt": "2026-02-04T14:57:04.734Z"
+  },
+  {
+    "id": "local-1771508000845",
+    "name": "surajkanojia",
+    "email": "pijogeg940@advarm.com",
+    "password": "$2a$10$BoxVs6mZKHhqEqPm.DvDyuUkJ1l0lSTkUapEQFtREEVQuRyRlWAdK",
+    "role": "user",
+    "createdAt": "2026-02-19T13:33:20.845Z",
+    "contact": "992002155",
+    "location": "navi mumbai",
+    "isVolunteer": true,
+    "skills": [
+      "docotot"
+    ],
+    "availability": true
+  },
+  {
+    "id": "local-1771509757910",
+    "name": "suraj",
+    "email": "pijogeg94@advarm.com",
+    "password": "$2a$10$M8gp/G3JxZDH/.FHDPwHfuYAoPk2ZBg5frIvfxlD4DrHizp0U9xyS",
+    "role": "user",
+    "createdAt": "2026-02-19T14:02:37.910Z",
+    "contact": "6484651564",
+    "location": "navi mumbai",
+    "skills": [
+      "medical helper"
+    ],
+    "availability": true
+  }
+]

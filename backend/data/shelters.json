@@ -1,0 +1,59 @@
+[
+  {
+    "_id": "sample-1",
+    "name": "City Community Center",
+    "location": {
+      "lat": 40.7128,
+      "lng": -74.006,
+      "address": "123 Main St, New York, NY"
+    },
+    "capacity": 200,
+    "occupancy": 45,
+    "status": "Open",
+    "contact": "+1 555-0101",
+    "facilities": [
+      "Food",
+      "Water",
+      "Medical",
+      "Sleeping Area"
+    ],
+    "createdAt": "2026-02-19T13:40:31.369Z"
+  },
+  {
+    "_id": "sample-2",
+    "name": "Westside High School Gym",
+    "location": {
+      "lat": 40.73,
+      "lng": -74.01,
+      "address": "456 West Ave, New York, NY"
+    },
+    "capacity": 500,
+    "occupancy": 120,
+    "status": "Open",
+    "contact": "+1 555-0102",
+    "facilities": [
+      "Water",
+      "Restrooms",
+      "Parking"
+    ],
+    "createdAt": "2026-02-19T13:40:31.369Z"
+  },
+  {
+    "_id": "sample-3",
+    "name": "East River Shelter",
+    "location": {
+      "lat": 40.75,
+      "lng": -73.98,
+      "address": "789 River Rd, New York, NY"
+    },
+    "capacity": 150,
+    "occupancy": 150,
+    "status": "Full",
+    "contact": "+1 555-0103",
+    "facilities": [
+      "Food",
+      "Medical"
+    ],
+    "createdAt": "2026-02-19T13:40:31.369Z"
+  }
+]

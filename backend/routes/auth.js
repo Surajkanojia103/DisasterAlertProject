@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const fs = require('fs');
 const path = require('path');
+const mongoose = require('mongoose');
 
 const DATA_DIR = path.join(__dirname, '../data');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
@@ -37,6 +38,8 @@ const writeLocalUsers = (users) => {
     }
 };
 
+const isDbConnected = () => mongoose.connection.readyState === 1;
+
 // Register
 router.post('/signup', async (req, res) => {
     try {
@@ -63,7 +66,7 @@ router.post('/signup', async (req, res) => {
             await user.save();
 
             // Create token
-            const payload = {
+            const payloadSignup = {
                 user: {
                     id: user.id,
                     role: user.role
@@ -71,7 +74,7 @@ router.post('/signup', async (req, res) => {
             };
 
             jwt.sign(
-                payload,
+                payloadSignup,
                 process.env.JWT_SECRET,
                 { expiresIn: '24h' },
                 (err, token) => {
@@ -84,7 +87,9 @@ router.post('/signup', async (req, res) => {
                             email: user.email,
                             role: user.role,
                             gender: user.gender,
-                            contact: user.contact
+                            contact: user.contact,
+                            isVolunteer: user.isVolunteer,
+                            volunteerStatus: user.volunteerStatus
                         }
                     });
                 }
@@ -114,7 +119,7 @@ router.post('/signup', async (req, res) => {
             users.push(newUser);
             writeLocalUsers(users);
 
-            const payload = {
+            const payloadLocal = {
                 user: {
                     id: newUser.id,
                     role: newUser.role
@@ -122,7 +127,7 @@ router.post('/signup', async (req, res) => {
             };
 
             jwt.sign(
-                payload,
+                payloadLocal,
                 process.env.JWT_SECRET,
                 { expiresIn: '24h' },
                 (err, token) => {
@@ -145,7 +150,7 @@ router.post('/login', async (req, res) => {
         // Hardcoded Admin Login
         if (email === 'admin@123' || email === 'admin@123.com') {
             if (password === '12345678') {
-                const payload = {
+                const payloadAdmin = {
                     user: {
                         id: 'admin-id',
                         name: 'Administrator',
@@ -153,7 +158,7 @@ router.post('/login', async (req, res) => {
                         role: 'admin'
                     }
                 };
-                jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
+                jwt.sign(payloadAdmin, process.env.JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
                     if (err) throw err;
                     return res.json({
                         token,
@@ -179,10 +184,26 @@ router.post('/login', async (req, res) => {
                 return res.status(400).json({ message: 'Invalid Credentials' });
             }
 
-            const payload = { user: { id: user.id, role: user.role } };
-            jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
+            const payloadDB = { user: { id: user.id, role: user.role } };
+            jwt.sign(payloadDB, process.env.JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
                 if (err) throw err;
-                res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+                res.json({
+                    token,
+                    user: {
+                        id: user.id,
+                        name: user.name,
+                        email: user.email,
+                        role: user.role,
+                        isVolunteer: user.isVolunteer,
+                        volunteerStatus: user.volunteerStatus,
+                        skills: user.skills,
+                        contact: user.contact,
+                        location: user.location,
+                        profession: user.profession,
+                        experience: user.experience,
+                        reason: user.reason
+                    }
+                });
             });
 
         } catch (dbError) {
@@ -200,10 +221,11 @@ router.post('/login', async (req, res) => {
                 return res.status(400).json({ message: 'Invalid Credentials' });
             }
 
-            const payload = { user: { id: localUser.id, role: localUser.role } };
-            jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
+            const payloadLocalLogin = { user: { id: localUser.id, role: localUser.role } };
+            jwt.sign(payloadLocalLogin, process.env.JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
                 if (err) throw err;
-                res.json({ token, user: { id: localUser.id, name: localUser.name, email: localUser.email, role: localUser.role } });
+                const { password: pw, ...rest } = localUser;
+                res.json({ token, user: rest });
             });
         }
     } catch (err) {
@@ -217,31 +239,153 @@ const auth = require('../middleware/auth');
 // Update Profile
 router.put('/profile', auth, async (req, res) => {
     try {
-        const { name, gender, contact } = req.body;
+        const { name, gender, contact, isVolunteer, skills, availability, location, profession, experience, reason, applyForVolunteer } = req.body;
 
-        let user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({ message: 'User not found' });
+        if (isDbConnected()) {
+            let user = await User.findById(req.user.id);
+            if (user) {
+                if (name) user.name = name;
+                if (gender) user.gender = gender;
+                if (contact) user.contact = contact;
+                if (location) user.location = location;
+                if (profession) user.profession = profession;
+                if (experience) user.experience = experience;
+                if (reason) user.reason = reason;
 
-        if (name) user.name = name;
-        if (gender) user.gender = gender;
-        if (contact) user.contact = contact;
+                if (applyForVolunteer) {
+                    user.volunteerStatus = 'pending';
+                    user.isVolunteer = false; // Not active until approved
+                }
 
-        await user.save();
+                if (skills) user.skills = skills;
+                if (availability !== undefined) user.availability = availability;
 
-        res.json({
-            user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                gender: user.gender,
-                contact: user.contact
+                await user.save();
+
+                return res.json({
+                    user: {
+                        id: user.id,
+                        name: user.name,
+                        email: user.email,
+                        role: user.role,
+                        gender: user.gender,
+                        contact: user.contact,
+                        location: user.location,
+                        profession: user.profession,
+                        experience: user.experience,
+                        reason: user.reason,
+                        volunteerStatus: user.volunteerStatus,
+                        isVolunteer: user.isVolunteer,
+                        skills: user.skills,
+                        availability: user.availability
+                    }
+                });
             }
-        });
+        }
+
+        // Local Fallback
+        const users = readLocalUsers();
+        let localUserIndex = users.findIndex(u => u.id === req.user.id);
+        if (localUserIndex !== -1) {
+            if (name) users[localUserIndex].name = name;
+            if (gender) users[localUserIndex].gender = gender;
+            if (contact) users[localUserIndex].contact = contact;
+            if (location) users[localUserIndex].location = location;
+            if (profession) users[localUserIndex].profession = profession;
+            if (experience) users[localUserIndex].experience = experience;
+            if (reason) users[localUserIndex].reason = reason;
+
+            if (applyForVolunteer) {
+                users[localUserIndex].volunteerStatus = 'pending';
+                users[localUserIndex].isVolunteer = false;
+            }
+
+
+
+            if (skills) users[localUserIndex].skills = skills;
+            if (availability !== undefined) users[localUserIndex].availability = availability;
+
+            writeLocalUsers(users);
+            return res.json({
+                user: {
+                    ...users[localUserIndex]
+                }
+            });
+        }
+
+        res.status(404).json({ message: 'User not found' });
+
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
     }
+});
+
+// Admin: Update Volunteer Status
+router.put('/admin/volunteer-status/:id', auth, async (req, res) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ message: 'Access denied' });
+    }
+
+    try {
+        const { status } = req.body; // 'approved', 'rejected'
+
+        if (isDbConnected()) {
+            let user = await User.findById(req.params.id);
+            if (user) {
+                user.volunteerStatus = status;
+                if (status === 'approved') {
+                    user.isVolunteer = true;
+                } else {
+                    user.isVolunteer = false;
+                }
+                await user.save();
+                return res.json(user);
+            }
+        }
+
+        // Local Fallback
+        const users = readLocalUsers();
+        const userIndex = users.findIndex(u => u.id === req.params.id);
+        if (userIndex !== -1) {
+            users[userIndex].volunteerStatus = status;
+            users[userIndex].isVolunteer = (status === 'approved');
+            writeLocalUsers(users);
+            const { password, ...safeUser } = users[userIndex];
+            return res.json(safeUser);
+        }
+
+        res.status(404).json({ message: 'User not found' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+
+
+// Get all users (Admin only)
+router.get('/users', auth, async (req, res) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ message: 'Access denied' });
+    }
+
+    if (isDbConnected()) {
+        try {
+            const users = await User.find().select('-password');
+            return res.json(users);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const users = readLocalUsers();
+    // exclude password
+    const safeUsers = users.map(u => {
+        const { password, ...rest } = u;
+        return rest;
+    });
+    res.json(safeUsers);
 });
 
 module.exports = router;

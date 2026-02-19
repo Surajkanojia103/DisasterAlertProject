@@ -132,6 +132,11 @@ const UserPanel = () => {
                             <p className="text-slate-500 text-sm font-medium">{user?.email}</p>
                             {user?.contact && <p className="text-slate-400 text-sm mt-1">{user.contact}</p>}
                             {user?.gender && <p className="text-slate-400 text-xs uppercase tracking-wider mt-1">{user.gender}</p>}
+                            {user?.isVolunteer && (
+                                <div className="mt-3 inline-block bg-purple-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-lg shadow-purple-900/40">
+                                    Volunteer Responder
+                                </div>
+                            )}
 
                             <button
                                 onClick={() => setIsEditing(true)}

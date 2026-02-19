@@ -14,13 +14,18 @@ const ReportForm = () => {
         severity: 'Medium',
         contact: '',
         affected: '',
-        needs: ''
+        needs: '',
+        isStuck: false,
+        shelterRequest: false
     });
     const [submitted, setSubmitted] = useState(false);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -81,17 +86,17 @@ const ReportForm = () => {
                 disasterType: '',
                 location: '',
                 description: '',
-                severity: 'Medium',
-                contact: '',
                 affected: '',
-                needs: ''
+                needs: '',
+                isStuck: false,
+                shelterRequest: false
             });
             navigate('/user-panel');
         }, 2000);
     };
 
     return (
-        <div className="glass-panel rounded-[2.5rem] p-8 md:p-12 max-w-3xl mx-auto animate-fade-in-up">
+        <div className="glass-vibrant rounded-[2.5rem] p-8 md:p-12 max-w-3xl mx-auto animate-fade-in-up border border-slate-700/50 shadow-[0_0_40px_rgba(239,68,68,0.15)]">
             <h2 className="text-3xl font-black text-white mb-8 flex items-center border-b border-slate-800 pb-6">
                 <div className="bg-red-500/10 p-3 rounded-2xl mr-4 text-red-500 border border-red-500/20">
                     <AlertTriangle size={32} />
@@ -168,25 +173,26 @@ const ReportForm = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="block text-slate-400 text-xs font-bold ml-1 uppercase tracking-wider" htmlFor="severity">
-                                Severity Level
+                            <label className="block text-slate-400 text-xs font-bold ml-1 uppercase tracking-wider mb-3">
+                                Danger Level
                             </label>
-                            <div className="relative">
-                                <select
-                                    name="severity"
-                                    id="severity"
-                                    value={formData.severity}
-                                    onChange={handleChange}
-                                    className="w-full bg-slate-950/50 border border-slate-700 text-white text-sm rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent block p-4 appearance-none transition-all font-medium"
-                                >
-                                    <option value="Low" className="bg-slate-900">Low - Minor impact</option>
-                                    <option value="Medium" className="bg-slate-900">Medium - Requires attention</option>
-                                    <option value="High" className="bg-slate-900">High - Immediate danger</option>
-                                    <option value="Critical" className="bg-slate-900">Critical - Life threatening</option>
-                                </select>
-                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
-                                </div>
+                            <div className="grid grid-cols-4 gap-2">
+                                {['Low', 'Medium', 'High', 'Critical'].map((level) => (
+                                    <button
+                                        key={level}
+                                        type="button"
+                                        onClick={() => setFormData(prev => ({ ...prev, severity: level }))}
+                                        className={`py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${formData.severity === level
+                                            ? level === 'Critical' ? 'bg-red-600 border-red-500 text-white shadow-lg shadow-red-900/50'
+                                                : level === 'High' ? 'bg-orange-600 border-orange-500 text-white shadow-lg shadow-orange-900/50'
+                                                    : level === 'Medium' ? 'bg-yellow-600 border-yellow-500 text-white shadow-lg shadow-yellow-900/50'
+                                                        : 'bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-900/50'
+                                            : 'bg-slate-900 border-slate-700 text-slate-400 hover:bg-slate-800'
+                                            }`}
+                                    >
+                                        {level}
+                                    </button>
+                                ))}
                             </div>
                         </div>
                         <div className="space-y-2">
@@ -248,6 +254,36 @@ const ReportForm = () => {
                             className="w-full bg-slate-950/50 border border-slate-700 text-white text-sm rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent block p-4 transition-all font-medium placeholder:text-slate-600"
                             placeholder="For verification purposes"
                         />
+                    </div>
+
+                    <div className="space-y-4 pt-4 border-t border-slate-800">
+                        <div className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 ${formData.isStuck ? 'bg-red-600/20 border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.4)]' : 'bg-red-500/10 border-red-500/20 hover:bg-red-500/15'}`}>
+                            <input
+                                type="checkbox"
+                                name="isStuck"
+                                id="isStuck"
+                                checked={formData.isStuck}
+                                onChange={handleChange}
+                                className="w-6 h-6 rounded border-red-500 text-red-600 focus:ring-red-500 bg-red-900/20 shadow-sm"
+                            />
+                            <label htmlFor="isStuck" className={`font-bold cursor-pointer select-none transition-colors ${formData.isStuck ? 'text-red-100' : 'text-red-400'}`}>
+                                I am STUCK at this location and need rescue!
+                            </label>
+                        </div>
+
+                        <div className="flex items-center gap-4 bg-blue-500/10 p-4 rounded-xl border border-blue-500/20">
+                            <input
+                                type="checkbox"
+                                name="shelterRequest"
+                                id="shelterRequest"
+                                checked={formData.shelterRequest}
+                                onChange={handleChange}
+                                className="w-6 h-6 rounded border-blue-500 text-blue-600 focus:ring-blue-500 bg-blue-900/20"
+                            />
+                            <label htmlFor="shelterRequest" className="text-blue-200 font-bold cursor-pointer select-none">
+                                I need information about nearby Shelters.
+                            </label>
+                        </div>
                     </div>
 
                     <div className="pt-4">

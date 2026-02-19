@@ -70,6 +70,11 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updateUser = (userData) => {
+        setUser(userData);
+        localStorage.setItem('dars_user', JSON.stringify(userData));
+    };
+
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('dars_user');
@@ -78,7 +83,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, signup, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, signup, logout, loading, updateUser }}>
             {!loading && children}
         </AuthContext.Provider>
     );

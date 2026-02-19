@@ -38,8 +38,16 @@ const reportSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Pending', 'Verified', 'Rejected'],
+        enum: ['Pending', 'Verified', 'Rejected', 'Resolved'],
         default: 'Pending'
+    },
+    isStuck: {
+        type: Boolean,
+        default: false
+    },
+    shelterRequest: {
+        type: Boolean,
+        default: false
     },
     timestamp: {
         type: Date,

@@ -3,11 +3,19 @@ import { Link } from 'react-router-dom';
 
 const AlertCard = ({ alert }) => {
     const isGDACS = alert.source === 'GDACS';
+    const isUSGS = alert.source === 'USGS';
+
+    // Dynamic glow styles
+    const glowClass = isGDACS
+        ? 'hover:shadow-[0_0_20px_rgba(239,68,68,0.2)] hover:border-red-500/40'
+        : isUSGS
+            ? 'hover:shadow-[0_0_20px_rgba(59,130,246,0.2)] hover:border-blue-500/40'
+            : 'hover:shadow-[0_0_20px_rgba(249,115,22,0.2)] hover:border-orange-500/40';
 
     return (
-        <div className="group relative bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 hover:border-slate-600 transition-all duration-300 hover:shadow-2xl hover:shadow-red-900/10 hover:-translate-y-1 flex flex-col h-full">
+        <div className={`group relative bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 transition-all duration-300 hover:-translate-y-1 flex flex-col h-full ${glowClass}`}>
             {/* Colored Status Line */}
-            <div className={`absolute top-0 left-0 w-1.5 h-full transition-colors duration-300 ${isGDACS ? 'bg-red-500' : 'bg-orange-500'}`}></div>
+            <div className={`absolute top-0 left-0 w-1.5 h-full transition-colors duration-300 ${isGDACS ? 'bg-red-500' : isUSGS ? 'bg-blue-500' : 'bg-orange-500'}`}></div>
 
             <div className="p-6 pl-8 flex-grow relative">
                 {/* Header: Source & Type */}

@@ -28,6 +28,38 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    location: {
+        type: String,
+        default: ''
+    },
+    isVolunteer: {
+        type: Boolean,
+        default: false
+    },
+    skills: [{
+        type: String
+    }],
+    volunteerStatus: {
+        type: String,
+        enum: ['none', 'pending', 'approved', 'rejected'],
+        default: 'none'
+    },
+    profession: {
+        type: String,
+        default: ''
+    },
+    experience: {
+        type: String,
+        default: ''
+    },
+    reason: {
+        type: String,
+        default: ''
+    },
+    availability: {
+        type: Boolean,
+        default: true
+    },
     createdAt: {
         type: Date,
         default: Date.now
