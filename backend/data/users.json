@@ -35,5 +35,13 @@
       "medical helper"
     ],
     "availability": true
+  },
+  {
+    "id": "local-1771595423949",
+    "name": "surajkanojia",
+    "email": "pijogeg90@advarm.com",
+    "password": "$2a$10$zbCzLhttx4JHM/7.yluFieYj/2jRghKBe1U.2k8JwI5m9Mhdq4UJq",
+    "role": "user",
+    "createdAt": "2026-02-20T13:50:23.949Z"
   }
 ]

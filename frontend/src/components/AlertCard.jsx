@@ -1,5 +1,6 @@
 import { ExternalLink, Calendar, AlertCircle, Clock, Shield, Activity } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import heroRadar from '../assets/hero-radar.png';
 
 const AlertCard = ({ alert }) => {
     const isGDACS = alert.source === 'GDACS';
@@ -31,8 +32,13 @@ const AlertCard = ({ alert }) => {
                             {alert.type || 'ALERT'}
                         </span>
                     </div>
-                    <div className="text-slate-500 group-hover:text-white transition-colors">
-                        <Activity size={16} />
+                    <div className="flex items-center gap-3">
+                        <div className="text-slate-500 group-hover:text-white transition-colors flex items-center gap-2">
+                            {isGDACS && (
+                                <img src={heroRadar} alt="Global" className="w-6 h-6 object-contain mix-blend-screen animate-pulse" />
+                            )}
+                            <Activity size={16} />
+                        </div>
                     </div>
                 </div>
 

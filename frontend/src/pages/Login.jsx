@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { User, Lock } from 'lucide-react';
+import heroRadar from '../assets/hero-radar.png';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -41,9 +42,9 @@ const Login = () => {
             {/* Static Background Image */}
             <div className="absolute inset-0 z-0">
                 <img
-                    src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80"
+                    src={heroRadar}
                     alt="Background"
-                    className="w-full h-full object-cover opacity-40"
+                    className="w-full h-full object-cover opacity-30 mix-blend-screen"
                 />
                 {/* Overlay to ensure readability */}
                 <div className="absolute inset-0 bg-[#1E202E]/70 mix-blend-multiply"></div>

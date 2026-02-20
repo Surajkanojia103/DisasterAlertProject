@@ -12,9 +12,9 @@ const Navbar = () => {
     };
 
     const navLinkClasses = ({ isActive }) =>
-        `flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200 font-semibold text-sm whitespace-nowrap ${isActive
-            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
-            : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
+        `flex items-center gap-2 px-5 py-2.5 rounded-full transition-all duration-300 font-bold text-xs uppercase tracking-widest whitespace-nowrap ${isActive
+            ? 'bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)]'
+            : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
         }`;
 
     return (
@@ -24,42 +24,32 @@ const Navbar = () => {
 
                     {/* Logo */}
                     <Link to={user ? "/alerts" : "/"} className="flex items-center gap-3 group shrink-0">
-                        <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-[0_0_12px_rgba(79,70,229,0.5)] group-hover:scale-105 transition-all duration-200">
-                            <AlertTriangle size={20} strokeWidth={2.5} />
+                        <div className="bg-blue-600 p-2.5 rounded-xl text-white shadow-[0_0_15px_rgba(37,99,235,0.5)] group-hover:scale-110 transition-all duration-300">
+                            <AlertTriangle size={22} strokeWidth={3} />
                         </div>
-                        <span className="text-xl font-black tracking-tighter text-white">DARS</span>
+                        <span className="text-2xl font-black tracking-tighter text-white uppercase">DARS</span>
                     </Link>
 
                     {user && (
-                        <div className="hidden md:flex items-center bg-[#0d1117] px-2 py-1.5 rounded-full border border-slate-800/60 shadow-inner gap-0.5">
+                        <div className="hidden lg:flex items-center bg-slate-900/40 px-2 py-1.5 rounded-full border border-slate-800/60 shadow-inner gap-1 backdrop-blur-md">
                             <NavLink to="/alerts" className={navLinkClasses}>
-                                <AlertTriangle size={15} strokeWidth={2.5} />
-                                <span>Global Alerts</span>
+                                <div className="p-1 rounded bg-blue-500/10"><AlertTriangle size={14} /></div>
+                                <span>Alerts</span>
                             </NavLink>
                             <NavLink to="/report" className={navLinkClasses}>
-                                <FileText size={15} strokeWidth={2.5} />
-                                <span>Report Incident</span>
+                                <div className="p-1 rounded bg-slate-500/10"><FileText size={14} /></div>
+                                <span>Report</span>
                             </NavLink>
                             <NavLink to="/emergency" className={navLinkClasses}>
-                                <Phone size={15} strokeWidth={2.5} />
-                                <span>SOS</span>
+                                <div className="p-1 rounded bg-slate-500/10"><Phone size={14} /></div>
+                                <span>Emergency</span>
                             </NavLink>
-                            <NavLink to="/shelters" className={navLinkClasses}>
-                                <Home size={15} strokeWidth={2.5} />
-                                <span>Shelters</span>
-                            </NavLink>
-                            {user.role !== 'admin' && (
-                                <NavLink to="/volunteer" className={navLinkClasses}>
-                                    <Heart size={15} strokeWidth={2.5} />
-                                    <span>Volunteer</span>
-                                </NavLink>
-                            )}
                             <NavLink to="/safety" className={navLinkClasses}>
-                                <Shield size={15} strokeWidth={2.5} />
+                                <div className="p-1 rounded bg-slate-500/10"><Shield size={14} /></div>
                                 <span>Safety</span>
                             </NavLink>
                             <NavLink to="/settings" className={navLinkClasses}>
-                                <Settings size={15} strokeWidth={2.5} />
+                                <div className="p-1 rounded bg-slate-500/10"><Settings size={14} /></div>
                                 <span>Settings</span>
                             </NavLink>
                         </div>
@@ -72,17 +62,17 @@ const Navbar = () => {
                                 {user.role === 'admin' ? (
                                     <Link
                                         to="/admin"
-                                        className="flex items-center gap-2 text-yellow-400 hover:text-yellow-300 font-bold px-4 py-2 rounded-xl border border-yellow-500/40 bg-yellow-400/10 hover:bg-yellow-400/20 transition-all text-sm"
+                                        className="flex items-center gap-2 text-yellow-500 hover:text-yellow-400 font-black px-5 py-2.5 rounded-xl border border-yellow-500/30 bg-yellow-500/10 hover:bg-yellow-500/20 transition-all text-[10px] uppercase tracking-widest shadow-[0_0_15px_rgba(234,179,8,0.1)]"
                                     >
-                                        <Shield size={15} />
+                                        <Shield size={14} />
                                         <span>ADMIN</span>
                                     </Link>
                                 ) : (
                                     <Link
                                         to="/user-panel"
-                                        className="flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-bold px-4 py-2 rounded-xl border border-indigo-500/40 bg-indigo-400/10 hover:bg-indigo-400/20 transition-all text-sm"
+                                        className="flex items-center gap-2 text-blue-400 hover:text-blue-300 font-black px-5 py-2.5 rounded-xl border border-blue-500/30 bg-blue-400/10 hover:bg-blue-400/20 transition-all text-[10px] uppercase tracking-widest shadow-[0_0_15px_rgba(37,99,235,0.1)]"
                                     >
-                                        <User size={15} />
+                                        <User size={14} />
                                         <span>PROFILE</span>
                                     </Link>
                                 )}

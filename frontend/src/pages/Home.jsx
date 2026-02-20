@@ -38,13 +38,13 @@ const Home = () => {
                 <img
                     src={heroRadar}
                     alt="Global Monitoring"
-                    className="absolute top-1/2 left-0 -translate-y-1/2 w-96 md:w-[50rem] h-auto object-contain opacity-80 pointer-events-none mix-blend-screen hidden md:block"
+                    className="absolute top-1/2 left-0 -translate-y-1/2 w-64 md:w-[42rem] h-auto object-contain opacity-80 pointer-events-none mix-blend-screen block"
                     style={{ maskImage: 'radial-gradient(circle, black 40%, transparent 100%)', WebkitMaskImage: 'radial-gradient(circle, black 40%, transparent 100%)' }}
                 />
                 <img
                     src={heroAnalytics}
                     alt="Data Analytics"
-                    className="absolute top-1/2 right-0 -translate-y-1/2 w-96 md:w-[50rem] h-auto object-contain opacity-80 pointer-events-none mix-blend-screen hidden md:block"
+                    className="absolute top-1/2 right-0 -translate-y-1/2 w-64 md:w-[42rem] h-auto object-contain opacity-80 pointer-events-none mix-blend-screen block"
                     style={{ maskImage: 'radial-gradient(circle, black 40%, transparent 100%)', WebkitMaskImage: 'radial-gradient(circle, black 40%, transparent 100%)' }}
                 />
 
@@ -56,41 +56,41 @@ const Home = () => {
                         </span>
                         <span className="tracking-widest uppercase">Global Monitoring Active</span>
                     </div>
-                    <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight mb-4 text-white">
+                    <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight mb-6 text-white uppercase italic">
                         Disaster Alert And <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">Reporting System</span>
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500 not-italic">Reporting System</span>
                     </h1>
-                    <p className="text-base text-slate-300 mb-8 leading-relaxed max-w-xl mx-auto font-medium">
+                    <p className="text-lg text-slate-300 mb-10 leading-relaxed max-w-2xl mx-auto font-medium">
                         Advanced real-time tracking of seismic, weather, and emergency events worldwide.
-                        Integrated with USGS, GDACS, and local citizen reporting.
+                        <span className="block text-slate-500 text-sm mt-2 uppercase tracking-widest font-bold">Integrated with USGS, GDACS, and local citizen reporting.</span>
                     </p>
-                    <div className="flex flex-wrap justify-center gap-4 mb-10">
-                        <Link to="/report" className="bg-red-600 hover:bg-red-500 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-red-900/40 flex items-center space-x-2 text-base group">
-                            <AlertTriangle size={18} className="group-hover:animate-pulse" />
+                    <div className="flex flex-wrap justify-center gap-6 mb-12">
+                        <Link to="/report" className="bg-red-600 hover:bg-red-500 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest transition-all shadow-[0_0_30px_rgba(220,38,38,0.3)] flex items-center space-x-3 text-sm group">
+                            <AlertTriangle size={20} className="group-hover:animate-pulse" />
                             <span>Report Incident</span>
                         </Link>
-                        <Link to="/safety" className="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg border border-slate-700 text-base">
+                        <Link to="/safety" className="bg-slate-900/50 backdrop-blur-md hover:bg-slate-800 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest transition-all border border-slate-700 hover:border-blue-500/50 text-sm shadow-xl">
                             Safety Protocols
                         </Link>
                     </div>
 
                     {/* Live Stats Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto border-t border-slate-800/50 pt-8">
-                        <div className="bg-slate-950/30 p-4 rounded-2xl border border-slate-800/50 backdrop-blur-sm">
-                            <div className="text-2xl font-black text-white mb-1">{alerts.length}</div>
-                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Active Alerts</div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto border-t border-slate-800/60 pt-10">
+                        <div className="bg-slate-950/40 p-6 rounded-[2rem] border border-slate-800 shadow-xl backdrop-blur-md transition-all hover:border-slate-700 group">
+                            <div className="text-4xl font-black text-white mb-2 group-hover:scale-110 transition-transform">128</div>
+                            <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Active Alerts</div>
                         </div>
-                        <div className="bg-slate-950/30 p-4 rounded-2xl border border-slate-800/50 backdrop-blur-sm">
-                            <div className="text-2xl font-black text-blue-400 mb-1">24/7</div>
-                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Monitoring</div>
+                        <div className="bg-slate-950/40 p-6 rounded-[2rem] border border-slate-800 shadow-xl backdrop-blur-md transition-all hover:border-blue-500/30 group">
+                            <div className="text-4xl font-black text-blue-500 mb-2 group-hover:scale-110 transition-transform">24/7</div>
+                            <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Monitoring</div>
                         </div>
-                        <div className="bg-slate-950/30 p-4 rounded-2xl border border-slate-800/50 backdrop-blur-sm">
-                            <div className="text-2xl font-black text-green-400 mb-1">3+</div>
-                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Data Sources</div>
+                        <div className="bg-slate-950/40 p-6 rounded-[2rem] border border-slate-800 shadow-xl backdrop-blur-md transition-all hover:border-green-500/30 group">
+                            <div className="text-4xl font-black text-green-500 mb-2 group-hover:scale-110 transition-transform">0</div>
+                            <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Citizen Reports</div>
                         </div>
-                        <div className="bg-slate-950/30 p-4 rounded-2xl border border-slate-800/50 backdrop-blur-sm">
-                            <div className="text-2xl font-black text-orange-400 mb-1">Global</div>
-                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Coverage</div>
+                        <div className="bg-slate-950/40 p-6 rounded-[2rem] border border-slate-800 shadow-xl backdrop-blur-md transition-all hover:border-orange-500/30 group">
+                            <div className="text-4xl font-black text-orange-500 mb-2 group-hover:scale-110 transition-transform text-transparent bg-clip-text bg-gradient-to-tr from-orange-400 to-orange-600">Global</div>
+                            <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Coverage</div>
                         </div>
                     </div>
                 </div>
@@ -98,24 +98,27 @@ const Home = () => {
 
             {/* Live Alerts Section */}
             <div className="space-y-8 animate-fade-in-up animation-delay-200 mt-12 relative z-20">
-                <div className="flex flex-col md:flex-row justify-between items-end gap-4 pb-6">
-                    <div>
-                        <h2 className="text-4xl font-black text-white flex items-center tracking-tight">
-                            <Activity size={32} className="mr-4 text-blue-500" />
-                            Live Global Feed
-                        </h2>
-                        <p className="text-slate-400 mt-3 text-lg font-medium">Real-time data stream from international monitoring stations</p>
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6 pb-12 border-b border-slate-800/50">
+                    <div className="flex items-center gap-6">
+                        <div className="relative group">
+                            <div className="absolute inset-0 bg-blue-500/20 blur-xl group-hover:bg-blue-500/40 transition-all rounded-full"></div>
+                            <Activity size={48} className="relative text-blue-500 animate-pulse" />
+                        </div>
+                        <div>
+                            <h2 className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase italic">Live Global Feed</h2>
+                            <p className="text-slate-500 mt-2 text-sm font-medium">Real-time data stream from international monitoring stations</p>
+                        </div>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3">
-                        <span className="bg-slate-800 px-4 py-2 rounded-xl border border-slate-700 flex items-center text-[10px] font-black uppercase tracking-widest text-slate-300 shadow-sm">
-                            <span className="w-2 h-2 bg-blue-500 rounded-full mr-2 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></span> USGS
+                        <span className="bg-slate-900/80 px-5 py-2.5 rounded-2xl border border-slate-800 flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 shadow-xl backdrop-blur-md">
+                            <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 shadow-[0_0_10px_rgba(59,130,246,0.6)] animate-pulse"></span> USGS
                         </span>
-                        <span className="bg-slate-800 px-4 py-2 rounded-xl border border-slate-700 flex items-center text-[10px] font-black uppercase tracking-widest text-slate-300 shadow-sm">
-                            <span className="w-2 h-2 bg-orange-500 rounded-full mr-2 shadow-[0_0_8px_rgba(249,115,22,0.5)]"></span> GDACS
+                        <span className="bg-slate-900/80 px-5 py-2.5 rounded-2xl border border-slate-800 flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 shadow-xl backdrop-blur-md">
+                            <span className="w-2 h-2 bg-orange-500 rounded-full mr-3 shadow-[0_0_10px_rgba(249,115,22,0.6)] animate-pulse"></span> GDACS
                         </span>
-                        <span className="bg-slate-800 px-4 py-2 rounded-xl border border-slate-700 flex items-center text-[10px] font-black uppercase tracking-widest text-slate-300 shadow-sm">
-                            <span className="w-2 h-2 bg-green-500 rounded-full mr-2 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></span> ReliefWeb
+                        <span className="bg-slate-900/80 px-5 py-2.5 rounded-2xl border border-slate-800 flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 shadow-xl backdrop-blur-md">
+                            <span className="w-2 h-2 bg-green-500 rounded-full mr-3 shadow-[0_0_10px_rgba(34,197,94,0.6)] animate-pulse"></span> ReliefWeb
                         </span>
                     </div>
                 </div>
