@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { HandHeart, CheckCircle, Clock, MapPin, Phone, Award, User as UserIcon, Briefcase, ShieldCheck, HeartPulse, Send, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import { BASE_URL } from '../apiConfig';
 
 const Volunteer = () => {
     const { user, updateUser } = useAuth();
@@ -42,7 +43,7 @@ const Volunteer = () => {
         try {
             const skillsArray = formData.skills.split(',').map(s => s.trim()).filter(s => s);
             const token = localStorage.getItem('token');
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+            const API_URL = BASE_URL;
 
             const payload = {
                 name: formData.name,

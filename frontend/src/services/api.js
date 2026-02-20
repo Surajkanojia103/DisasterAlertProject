@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { BASE_URL } from '../apiConfig';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = BASE_URL;
 
 export const fetchAlerts = async () => {
     try {

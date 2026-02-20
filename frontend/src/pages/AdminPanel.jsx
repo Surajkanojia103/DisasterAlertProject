@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { BASE_URL } from '../apiConfig';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle, XCircle, Clock, MapPin, Shield, FileText, ChevronLeft, ChevronRight, HandHeart } from 'lucide-react';
@@ -26,7 +27,7 @@ const AdminPanel = () => {
         try {
             const token = localStorage.getItem('token');
             const config = { headers: { 'x-auth-token': token } };
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+            const API_URL = BASE_URL;
             const res = await axios.get(`${API_URL}/auth/users`, config);
             // Filter volunteers or those requesting to be one and sort by date descending (Newest first)
             const volList = res.data
@@ -56,7 +57,7 @@ const AdminPanel = () => {
         try {
             const token = localStorage.getItem('token');
             const config = { headers: { 'x-auth-token': token } };
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+            const API_URL = BASE_URL;
 
             await axios.put(`${API_URL}/auth/admin/volunteer-status/${userId}`, { status: newStatus }, config);
 
@@ -102,7 +103,7 @@ const AdminPanel = () => {
                         'x-auth-token': token
                     }
                 };
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+                const API_URL = BASE_URL;
 
                 // Fetch paginated reports
                 const res = await axios.get(`${API_URL}/reports?page=${currentPage}&limit=${itemsPerPage}`, config);
@@ -150,7 +151,7 @@ const AdminPanel = () => {
                 }
             };
 
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+            const API_URL = BASE_URL;
             await axios.put(`${API_URL}/reports/${reportId}/status`, { status: newStatus }, config);
 
             // Update local state

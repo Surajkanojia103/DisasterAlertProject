@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { BASE_URL } from '../apiConfig';
 
 const AuthContext = createContext();
 
@@ -12,7 +13,6 @@ export const AuthProvider = ({ children }) => {
     // Configure axios base URL (optional, but good practice)
     // axios.defaults.baseURL = 'http://localhost:5000/api'; 
     // For now, we'll use full URLs or proxy. Let's use full URLs for clarity.
-    const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
     const API_URL = `${BASE_URL}/auth`;
 
     useEffect(() => {

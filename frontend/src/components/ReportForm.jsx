@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { BASE_URL } from '../apiConfig';
 import { Send, MapPin, AlertTriangle, Info } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -50,7 +51,7 @@ const ReportForm = () => {
                 userName: user.name
             };
 
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+            const API_URL = BASE_URL;
             await axios.post(`${API_URL}/reports`, reportData, config);
 
             console.log('Report Submitted');
