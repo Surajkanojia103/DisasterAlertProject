@@ -9,7 +9,7 @@ const Report = () => {
     return (
         <div className="space-y-8 max-w-4xl mx-auto animate-fade-in-up">
             <div className="text-center">
-                <h1 className="text-4xl font-black text-white tracking-tight">Citizen Reporting</h1>
+                <h1 className="text-4xl font-black text-white tracking-tight uppercase italic">Citizen <span className="text-red-500">Reporting</span></h1>
                 <p className="text-slate-400 mt-3 text-lg">Help us track disasters by reporting incidents in your area.</p>
             </div>
 

@@ -97,8 +97,8 @@ const Home = () => {
             </div>
 
             {/* Live Alerts Section */}
-            <div className="space-y-8 animate-fade-in-up animation-delay-200 mt-12 relative z-20">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-6 pb-12 border-b border-slate-800/50">
+            <div className="space-y-4 animate-fade-in-up animation-delay-200 mt-2 relative z-20">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6 pb-3 border-b border-slate-800/50">
                     <div className="flex items-center gap-6">
                         <div className="relative group">
                             <div className="absolute inset-0 bg-blue-500/20 blur-xl group-hover:bg-blue-500/40 transition-all rounded-full"></div>
@@ -106,7 +106,7 @@ const Home = () => {
                         </div>
                         <div>
                             <h2 className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase italic">Live Global Feed</h2>
-                            <p className="text-slate-500 mt-2 text-sm font-medium">Real-time data stream from international monitoring stations</p>
+                            <p className="text-slate-500 mt-1 text-sm font-medium">Real-time data stream from international monitoring stations</p>
                         </div>
                     </div>
 

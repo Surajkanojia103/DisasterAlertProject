@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, XCircle, Clock, MapPin, Shield, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, MapPin, Shield, FileText, ChevronLeft, ChevronRight, HandHeart } from 'lucide-react';
 
 const AdminPanel = () => {
     const { user } = useAuth();
@@ -28,14 +28,26 @@ const AdminPanel = () => {
             const config = { headers: { 'x-auth-token': token } };
             const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
             const res = await axios.get(`${API_URL}/auth/users`, config);
-            // Filter volunteers or those requesting to be one
-            const volList = res.data.filter(u => u.isVolunteer || u.volunteerStatus === 'pending');
+            // Filter volunteers or those requesting to be one and sort by date descending (Newest first)
+            const volList = res.data
+                .filter(u => u.isVolunteer || u.volunteerStatus === 'pending')
+                .sort((a, b) => {
+                    const dateA = a.volunteerAppliedAt || a.createdAt || 0;
+                    const dateB = b.volunteerAppliedAt || b.createdAt || 0;
+                    return new Date(dateB) - new Date(dateA);
+                });
             setVolunteers(volList);
         } catch (err) {
             console.error("Error fetching volunteers:", err);
             // Fallback
             const storedUsers = JSON.parse(localStorage.getItem('dars_users') || '[]');
-            const volList = storedUsers.filter(u => u.isVolunteer || u.volunteerStatus === 'pending');
+            const volList = storedUsers
+                .filter(u => u.isVolunteer || u.volunteerStatus === 'pending')
+                .sort((a, b) => {
+                    const dateA = a.volunteerAppliedAt || a.createdAt || 0;
+                    const dateB = b.volunteerAppliedAt || b.createdAt || 0;
+                    return new Date(dateB) - new Date(dateA);
+                });
             setVolunteers(volList);
         }
     };
@@ -65,6 +77,10 @@ const AdminPanel = () => {
             setVolunteers(updatedUsers.filter(u => u.isVolunteer || u.volunteerStatus === 'pending'));
         }
     };
+
+    useEffect(() => {
+        fetchVolunteers();
+    }, []);
 
     useEffect(() => {
         if (activeTab === 'volunteers') {
@@ -101,7 +117,10 @@ const AdminPanel = () => {
                         // Fallback if stats not provided (older backend?)
                         const newStats = res.data.reports.reduce((acc, report) => {
                             acc.total++;
-                            acc[report.status.toLowerCase()]++;
+                            const statusKey = report.status?.toLowerCase();
+                            if (statusKey && acc[statusKey] !== undefined) {
+                                acc[statusKey]++;
+                            }
                             return acc;
                         }, { total: 0, pending: 0, verified: 0, rejected: 0 });
                         setStats(newStats);
@@ -202,23 +221,52 @@ const AdminPanel = () => {
                 </div>
             </div>
 
-            {/* Stats Grid - Note: Shows stats for current page only in this version */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm">
-                    <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Reports</p>
-                    <p className="text-3xl font-black text-white mt-1">{stats.total}</p>
+            {/* Stats Sections */}
+            <div className="space-y-6">
+                {/* Incident Report Stats */}
+                <div className="space-y-3">
+                    <h3 className="text-[10px] font-black text-red-500/50 uppercase tracking-[0.3em] ml-1">Incident Report Metrics</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm">
+                            <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Reports</p>
+                            <p className="text-3xl font-black text-white mt-1">{stats.total}</p>
+                        </div>
+                        <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm border-l-2 border-l-yellow-500">
+                            <p className="text-yellow-500 text-xs font-bold uppercase tracking-wider">Pending Review</p>
+                            <p className="text-3xl font-black text-white mt-1">{stats.pending}</p>
+                        </div>
+                        <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm border-l-2 border-l-green-500">
+                            <p className="text-green-500 text-xs font-bold uppercase tracking-wider">Verified Reports</p>
+                            <p className="text-3xl font-black text-white mt-1">{stats.verified}</p>
+                        </div>
+                        <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm border-l-2 border-l-red-500">
+                            <p className="text-red-500 text-xs font-bold uppercase tracking-wider">Rejected Reports</p>
+                            <p className="text-3xl font-black text-white mt-1">{stats.rejected}</p>
+                        </div>
+                    </div>
                 </div>
-                <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm">
-                    <p className="text-yellow-500 text-xs font-bold uppercase tracking-wider">Pending Review</p>
-                    <p className="text-3xl font-black text-white mt-1">{stats.pending}</p>
-                </div>
-                <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm">
-                    <p className="text-green-500 text-xs font-bold uppercase tracking-wider">Verified Reports</p>
-                    <p className="text-3xl font-black text-white mt-1">{stats.verified}</p>
-                </div>
-                <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm">
-                    <p className="text-red-500 text-xs font-bold uppercase tracking-wider">Rejected Reports</p>
-                    <p className="text-3xl font-black text-white mt-1">{stats.rejected}</p>
+
+                {/* Volunteer Stats */}
+                <div className="space-y-3">
+                    <h3 className="text-[10px] font-black text-rose-500/50 uppercase tracking-[0.3em] ml-1">Volunteer Force Metrics</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm">
+                            <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Force</p>
+                            <p className="text-3xl font-black text-white mt-1">{volunteers.length}</p>
+                        </div>
+                        <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm border-l-2 border-l-yellow-500">
+                            <p className="text-yellow-500 text-xs font-bold uppercase tracking-wider">Pending Vetting</p>
+                            <p className="text-3xl font-black text-white mt-1">{volunteers.filter(v => v.volunteerStatus === 'pending').length}</p>
+                        </div>
+                        <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm border-l-2 border-l-emerald-500">
+                            <p className="text-emerald-500 text-xs font-bold uppercase tracking-wider">Verified Responders</p>
+                            <p className="text-3xl font-black text-white mt-1">{volunteers.filter(v => v.isVolunteer).length}</p>
+                        </div>
+                        <div className="bg-slate-900/50 p-6 rounded-2xl shadow-sm border border-slate-800 backdrop-blur-sm border-l-2 border-l-rose-500">
+                            <p className="text-rose-500 text-xs font-bold uppercase tracking-wider">Rejected</p>
+                            <p className="text-3xl font-black text-white mt-1">{volunteers.filter(v => v.volunteerStatus === 'rejected').length}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -233,10 +281,15 @@ const AdminPanel = () => {
                 </button>
                 <button
                     onClick={() => setActiveTab('volunteers')}
-                    className={`pb-4 px-4 font-bold text-sm tracking-wide transition-all ${activeTab === 'volunteers' ? 'text-purple-500 border-b-2 border-purple-500' : 'text-slate-400 hover:text-white'
+                    className={`pb-4 px-6 font-bold text-xs tracking-[0.2em] transition-all uppercase flex items-center gap-2 ${activeTab === 'volunteers' ? 'text-rose-500 border-b-2 border-rose-500' : 'text-slate-400 hover:text-white'
                         }`}
                 >
                     VOLUNTEERS
+                    {volunteers.filter(v => v.volunteerStatus === 'pending').length > 0 && (
+                        <span className="bg-rose-600 text-white text-[9px] px-1.5 py-0.5 rounded-full animate-pulse">
+                            {volunteers.filter(v => v.volunteerStatus === 'pending').length}
+                        </span>
+                    )}
                 </button>
             </div>
 
@@ -393,10 +446,10 @@ const AdminPanel = () => {
             ) : (
                 <div className="bg-slate-900/50 rounded-2xl shadow-xl overflow-hidden border border-slate-800 backdrop-blur-sm">
                     <div className="p-6 border-b border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-                        <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                            <Shield className="text-purple-500" size={24} />
+                        <h2 className="text-xl font-black text-white flex items-center gap-3 uppercase italic tracking-tighter">
+                            <HandHeart className="text-rose-500" size={24} />
                             Volunteer Applications
-                            <span className="ml-2 bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded-full">{filteredVolunteers.length}</span>
+                            <span className="ml-2 bg-rose-500/10 text-rose-500 text-[10px] px-3 py-1 rounded-full border border-rose-500/20">{filteredVolunteers.length}</span>
                         </h2>
                         <div className="flex gap-3">
                             <button
@@ -409,11 +462,11 @@ const AdminPanel = () => {
                             <select
                                 value={volunteerFilter}
                                 onChange={(e) => setVolunteerFilter(e.target.value)}
-                                className="px-4 py-2 bg-slate-950 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
+                                className="px-4 py-2 bg-slate-950 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 text-[10px] font-black uppercase tracking-widest text-white"
                             >
                                 <option value="All">All Status</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Active">Active / Approved</option>
+                                <option value="Pending">Pending Review</option>
+                                <option value="Active">Verified / Active</option>
                                 <option value="Rejected">Rejected</option>
                             </select>
                         </div>
@@ -431,24 +484,24 @@ const AdminPanel = () => {
                                             <div className="flex items-center gap-3 mb-2">
                                                 <h3 className="text-lg font-bold text-white">{vol.name}</h3>
                                                 {vol.volunteerStatus === 'pending' && (
-                                                    <span className="bg-yellow-500/10 text-yellow-400 text-[10px] px-2 py-1 rounded-full border border-yellow-500/20 font-black uppercase tracking-wider animate-pulse transition-all">
+                                                    <span className="bg-yellow-500/10 text-yellow-400 text-[10px] px-3 py-1 rounded-full border border-yellow-500/20 font-black uppercase tracking-wider animate-pulse transition-all">
                                                         Pending
                                                     </span>
                                                 )}
                                                 {vol.isVolunteer && (
-                                                    <span className="bg-green-500/10 text-green-400 text-[10px] px-2 py-1 rounded-full border border-green-500/20 font-black uppercase tracking-wider">
-                                                        Active
+                                                    <span className="bg-green-500/10 text-green-400 text-[10px] px-3 py-1 rounded-full border border-green-500/20 font-black uppercase tracking-wider">
+                                                        Verified
                                                     </span>
                                                 )}
                                                 {vol.volunteerStatus === 'rejected' && (
-                                                    <span className="bg-red-500/10 text-red-400 text-[10px] px-2 py-1 rounded-full border border-red-500/20 font-black uppercase tracking-wider">
+                                                    <span className="bg-red-500/10 text-red-400 text-[10px] px-3 py-1 rounded-full border border-red-500/20 font-black uppercase tracking-wider">
                                                         Rejected
                                                     </span>
                                                 )}
                                             </div>
                                             <div className="text-sm text-slate-400 mb-2">{vol.email}</div>
 
-                                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-950/30 p-3 rounded-xl border border-slate-800">
+                                            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-slate-950/30 p-3 rounded-xl border border-slate-800">
                                                 <div>
                                                     <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Contact</p>
                                                     <p className="text-sm text-slate-300 font-medium">{vol.contact || 'N/A'} • {vol.location || 'N/A'}</p>
@@ -458,8 +511,12 @@ const AdminPanel = () => {
                                                     <p className="text-sm text-slate-300 font-medium">{vol.profession || 'N/A'} • {vol.experience || 'N/A'}</p>
                                                 </div>
                                                 <div>
-                                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Motivation</p>
-                                                    <p className="text-sm text-slate-300 font-medium italic truncate">{vol.reason ? `"${vol.reason}"` : 'N/A'}</p>
+                                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Blood Group</p>
+                                                    <p className="text-sm text-rose-500 font-black">{vol.bloodGroup || 'Not Bio-Verified'}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Motivation / Bio</p>
+                                                    <p className="text-sm text-slate-300 font-medium italic leading-relaxed">{vol.reason ? `"${vol.reason}"` : 'N/A'}</p>
                                                 </div>
                                             </div>
 

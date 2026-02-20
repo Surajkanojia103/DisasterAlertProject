@@ -48,6 +48,16 @@ const Navbar = () => {
                                 <div className="p-1 rounded bg-slate-500/10"><Shield size={14} /></div>
                                 <span>Safety</span>
                             </NavLink>
+                            <NavLink to="/shelters" className={navLinkClasses}>
+                                <div className="p-1 rounded bg-slate-500/10"><Home size={14} /></div>
+                                <span>Shelters</span>
+                            </NavLink>
+                            {user.role !== 'admin' && (
+                                <NavLink to="/volunteer" className={navLinkClasses}>
+                                    <div className="p-1 rounded bg-rose-500/10"><Heart size={14} className="text-rose-500" /></div>
+                                    <span>Volunteer</span>
+                                </NavLink>
+                            )}
                             <NavLink to="/settings" className={navLinkClasses}>
                                 <div className="p-1 rounded bg-slate-500/10"><Settings size={14} /></div>
                                 <span>Settings</span>

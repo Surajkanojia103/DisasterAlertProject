@@ -95,8 +95,8 @@ const Alerts = () => {
                 </div>
             </div>
 
-            <div className="space-y-10">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-6 pb-12 border-b border-slate-800/50">
+            <div className="space-y-4">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6 pb-3 border-b border-slate-800/50">
                     <div className="flex items-center gap-6">
                         <div className="relative group">
                             <div className="absolute inset-0 bg-blue-500/20 blur-xl group-hover:bg-blue-500/40 transition-all rounded-full"></div>
@@ -104,7 +104,7 @@ const Alerts = () => {
                         </div>
                         <div>
                             <h2 className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase italic">Live Global Feed</h2>
-                            <p className="text-slate-500 mt-2 text-sm font-medium">Real-time data stream from international monitoring stations</p>
+                            <p className="text-slate-500 mt-1 text-sm font-medium">Real-time data stream from international monitoring stations</p>
                         </div>
                     </div>
 

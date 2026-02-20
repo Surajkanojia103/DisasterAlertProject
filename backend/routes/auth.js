@@ -172,62 +172,64 @@ router.post('/login', async (req, res) => {
         }
 
         // Regular User Login
-        try {
-            let user = await User.findOne({ email });
-            if (!user) {
-                // Try looking in local file if not found in DB (or if DB connection is active but empty)
-                throw new Error("User not found in DB, trying local");
-            }
-
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) {
-                return res.status(400).json({ message: 'Invalid Credentials' });
-            }
-
-            const payloadDB = { user: { id: user.id, role: user.role } };
-            jwt.sign(payloadDB, process.env.JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
-                if (err) throw err;
-                res.json({
-                    token,
-                    user: {
-                        id: user.id,
-                        name: user.name,
-                        email: user.email,
-                        role: user.role,
-                        isVolunteer: user.isVolunteer,
-                        volunteerStatus: user.volunteerStatus,
-                        skills: user.skills,
-                        contact: user.contact,
-                        location: user.location,
-                        profession: user.profession,
-                        experience: user.experience,
-                        reason: user.reason
+        if (isDbConnected()) {
+            try {
+                let user = await User.findOne({ email });
+                if (user) {
+                    const isMatch = await bcrypt.compare(password, user.password);
+                    if (!isMatch) {
+                        return res.status(400).json({ message: 'Invalid Credentials' });
                     }
-                });
-            });
 
-        } catch (dbError) {
-            // DB Failed or User not found -> Check Local File System
-            console.log("Checking local file system for user...");
-            const users = readLocalUsers();
-            const localUser = users.find(u => u.email === email);
-
-            if (!localUser) {
-                return res.status(400).json({ message: 'Invalid Credentials' });
+                    const payloadDB = { user: { id: user.id, role: user.role } };
+                    jwt.sign(payloadDB, process.env.JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
+                        if (err) throw err;
+                        res.json({
+                            token,
+                            user: {
+                                id: user.id,
+                                name: user.name,
+                                email: user.email,
+                                role: user.role,
+                                isVolunteer: user.isVolunteer,
+                                volunteerStatus: user.volunteerStatus,
+                                skills: user.skills,
+                                contact: user.contact,
+                                location: user.location,
+                                profession: user.profession,
+                                experience: user.experience,
+                                reason: user.reason,
+                                bloodGroup: user.bloodGroup
+                            }
+                        });
+                    });
+                    return;
+                }
+            } catch (dbError) {
+                console.log("Database Error during login query:", dbError.message);
             }
-
-            const isMatch = await bcrypt.compare(password, localUser.password);
-            if (!isMatch) {
-                return res.status(400).json({ message: 'Invalid Credentials' });
-            }
-
-            const payloadLocalLogin = { user: { id: localUser.id, role: localUser.role } };
-            jwt.sign(payloadLocalLogin, process.env.JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
-                if (err) throw err;
-                const { password: pw, ...rest } = localUser;
-                res.json({ token, user: rest });
-            });
         }
+
+        // DB Failed or User not found -> Check Local File System (Instant Fallback)
+        console.log("Checking local file system for user...");
+        const users = readLocalUsers();
+        const localUser = users.find(u => u.email === email);
+
+        if (!localUser) {
+            return res.status(400).json({ message: 'Invalid Credentials' });
+        }
+
+        const isMatch = await bcrypt.compare(password, localUser.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid Credentials' });
+        }
+
+        const payloadLocalLogin = { user: { id: localUser.id, role: localUser.role } };
+        jwt.sign(payloadLocalLogin, process.env.JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
+            if (err) throw err;
+            const { password: pw, ...rest } = localUser;
+            res.json({ token, user: rest });
+        });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
@@ -239,7 +241,7 @@ const auth = require('../middleware/auth');
 // Update Profile
 router.put('/profile', auth, async (req, res) => {
     try {
-        const { name, gender, contact, isVolunteer, skills, availability, location, profession, experience, reason, applyForVolunteer } = req.body;
+        const { name, gender, contact, isVolunteer, skills, availability, location, profession, experience, reason, applyForVolunteer, bloodGroup } = req.body;
 
         if (isDbConnected()) {
             let user = await User.findById(req.user.id);
@@ -251,10 +253,12 @@ router.put('/profile', auth, async (req, res) => {
                 if (profession) user.profession = profession;
                 if (experience) user.experience = experience;
                 if (reason) user.reason = reason;
+                if (bloodGroup) user.bloodGroup = bloodGroup;
 
                 if (applyForVolunteer) {
                     user.volunteerStatus = 'pending';
                     user.isVolunteer = false; // Not active until approved
+                    user.volunteerAppliedAt = new Date();
                 }
 
                 if (skills) user.skills = skills;
@@ -277,7 +281,9 @@ router.put('/profile', auth, async (req, res) => {
                         volunteerStatus: user.volunteerStatus,
                         isVolunteer: user.isVolunteer,
                         skills: user.skills,
-                        availability: user.availability
+                        availability: user.availability,
+                        bloodGroup: user.bloodGroup,
+                        volunteerAppliedAt: user.volunteerAppliedAt
                     }
                 });
             }
@@ -294,10 +300,12 @@ router.put('/profile', auth, async (req, res) => {
             if (profession) users[localUserIndex].profession = profession;
             if (experience) users[localUserIndex].experience = experience;
             if (reason) users[localUserIndex].reason = reason;
+            if (bloodGroup) users[localUserIndex].bloodGroup = bloodGroup;
 
             if (applyForVolunteer) {
                 users[localUserIndex].volunteerStatus = 'pending';
                 users[localUserIndex].isVolunteer = false;
+                users[localUserIndex].volunteerAppliedAt = new Date();
             }
 
 

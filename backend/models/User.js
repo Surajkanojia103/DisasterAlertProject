@@ -60,6 +60,13 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    bloodGroup: {
+        type: String,
+        default: ''
+    },
+    volunteerAppliedAt: {
+        type: Date
+    },
     createdAt: {
         type: Date,
         default: Date.now

@@ -96,12 +96,12 @@ const ReportForm = () => {
     };
 
     return (
-        <div className="glass-vibrant rounded-[2.5rem] p-8 md:p-12 max-w-3xl mx-auto animate-fade-in-up border border-slate-700/50 shadow-[0_0_40px_rgba(239,68,68,0.15)]">
-            <h2 className="text-3xl font-black text-white mb-8 flex items-center border-b border-slate-800 pb-6">
+        <div className="glass-panel rounded-[2.5rem] p-8 md:p-12 max-w-3xl mx-auto animate-fade-in-up">
+            <h2 className="text-2xl font-black text-white mb-8 flex items-center border-b border-slate-800 pb-6 uppercase italic">
                 <div className="bg-red-500/10 p-3 rounded-2xl mr-4 text-red-500 border border-red-500/20">
-                    <AlertTriangle size={32} />
+                    <AlertTriangle size={24} />
                 </div>
-                Report an Incident
+                Tactical Incident <span className="text-red-500 ml-2">Report</span>
             </h2>
 
             {submitted ? (
@@ -256,35 +256,7 @@ const ReportForm = () => {
                         />
                     </div>
 
-                    <div className="space-y-4 pt-4 border-t border-slate-800">
-                        <div className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 ${formData.isStuck ? 'bg-red-600/20 border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.4)]' : 'bg-red-500/10 border-red-500/20 hover:bg-red-500/15'}`}>
-                            <input
-                                type="checkbox"
-                                name="isStuck"
-                                id="isStuck"
-                                checked={formData.isStuck}
-                                onChange={handleChange}
-                                className="w-6 h-6 rounded border-red-500 text-red-600 focus:ring-red-500 bg-red-900/20 shadow-sm"
-                            />
-                            <label htmlFor="isStuck" className={`font-bold cursor-pointer select-none transition-colors ${formData.isStuck ? 'text-red-100' : 'text-red-400'}`}>
-                                I am STUCK at this location and need rescue!
-                            </label>
-                        </div>
 
-                        <div className="flex items-center gap-4 bg-blue-500/10 p-4 rounded-xl border border-blue-500/20">
-                            <input
-                                type="checkbox"
-                                name="shelterRequest"
-                                id="shelterRequest"
-                                checked={formData.shelterRequest}
-                                onChange={handleChange}
-                                className="w-6 h-6 rounded border-blue-500 text-blue-600 focus:ring-blue-500 bg-blue-900/20"
-                            />
-                            <label htmlFor="shelterRequest" className="text-blue-200 font-bold cursor-pointer select-none">
-                                I need information about nearby Shelters.
-                            </label>
-                        </div>
-                    </div>
 
                     <div className="pt-4">
                         <button

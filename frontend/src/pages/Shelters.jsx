@@ -1,124 +1,175 @@
-import { useState, useEffect } from 'react';
-import { MapPin, Phone, Users, CheckCircle, XCircle, Home, Navigation } from 'lucide-react';
-import axios from 'axios';
+import { useState } from 'react';
+import { Home, Users, MapPin, Phone, CheckCircle2, AlertCircle, Info } from 'lucide-react';
 
 const Shelters = () => {
-    const [shelters, setShelters] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState('all'); // all, open, full
-
-    useEffect(() => {
-        fetchShelters();
-    }, []);
-
-    const fetchShelters = async () => {
-        try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-            const res = await axios.get(`${API_URL}/shelters`);
-            setShelters(res.data);
-            setLoading(false);
-        } catch (err) {
-            console.error(err);
-            setLoading(false);
+    const [shelters] = useState([
+        {
+            id: 1,
+            name: "Central Community Hub",
+            location: "Downtown, Sector 4",
+            capacity: "500",
+            occupied: "480",
+            status: "Full",
+            contact: "+1 234 567 8901",
+            amenities: ["Food", "Water", "Medical", "Power"],
+            lastUpdated: "5 mins ago",
+            mapsUrl: "https://www.google.com/maps/search/?api=1&query=Central+Community+Hub+Downtown"
+        },
+        {
+            id: 2,
+            name: "Westside Emergency Center",
+            location: "Industrial Park, Block B",
+            capacity: "300",
+            occupied: "150",
+            status: "Medium",
+            contact: "+1 234 567 8902",
+            amenities: ["Water", "Power", "Wi-Fi"],
+            lastUpdated: "12 mins ago",
+            mapsUrl: "https://www.google.com/maps/search/?api=1&query=Industrial+Park+Emergency+Center"
+        },
+        {
+            id: 3,
+            name: "North Star Shelter",
+            location: "Residential Area, North 2nd St",
+            capacity: "250",
+            occupied: "20",
+            status: "Empty",
+            contact: "+1 234 567 8903",
+            amenities: ["Food", "Water", "Medical"],
+            lastUpdated: "2 mins ago",
+            mapsUrl: "https://www.google.com/maps/search/?api=1&query=Residential+Area+North+Star+Shelter"
+        },
+        {
+            id: 4,
+            name: "Mainland Relief Point",
+            location: "Harbor Road, Port Side",
+            capacity: "400",
+            occupied: "395",
+            status: "Full",
+            contact: "+1 234 567 8904",
+            amenities: ["Food", "Water", "Clothes"],
+            lastUpdated: "1 hour ago",
+            mapsUrl: "https://www.google.com/maps/search/?api=1&query=Harbor+Road+Relief+Point"
+        },
+        {
+            id: 5,
+            name: "Green Valley Base",
+            location: "Valley Road, East Hill",
+            capacity: "200",
+            occupied: "100",
+            status: "Medium",
+            contact: "+1 234 567 8905",
+            amenities: ["Power", "Wi-Fi", "Shelter"],
+            lastUpdated: "30 mins ago",
+            mapsUrl: "https://www.google.com/maps/search/?api=1&query=Green+Valley+Base+East+Hill"
         }
-    };
+    ]);
 
-    const getStatusColor = (status) => {
+    const getStatusStyles = (status) => {
         switch (status) {
-            case 'Open': return 'text-emerald-400 bg-emerald-400/10 border-emerald-400/30';
-            case 'Full': return 'text-amber-400 bg-amber-400/10 border-amber-400/30';
-            case 'Closed': return 'text-red-400 bg-red-400/10 border-red-400/30';
-            default: return 'text-slate-400 bg-slate-400/10 border-slate-400/30';
+            case 'Full':
+                return 'bg-red-500/10 text-red-500 border-red-500/20';
+            case 'Medium':
+                return 'bg-orange-500/10 text-orange-500 border-orange-500/20';
+            case 'Empty':
+                return 'bg-green-500/10 text-green-500 border-green-500/20';
+            default:
+                return 'bg-slate-500/10 text-slate-500 border-slate-500/20';
         }
     };
-
-    const filteredShelters = filter === 'all'
-        ? shelters
-        : shelters.filter(s => s.status.toLowerCase() === filter.toLowerCase());
 
     return (
-        <div className="space-y-8 animate-fade-in-up section-padding">
-            <div className="flex flex-col md:flex-row justify-between items-end gap-4 border-b border-slate-700/50 pb-8">
-                <div>
-                    <h1 className="text-4xl font-black text-white tracking-tight flex items-center gap-3">
-                        <Home className="text-blue-500" size={40} />
-                        Emergency Shelters
-                    </h1>
-                    <p className="text-slate-400 mt-2 text-lg">Find safe locations and relief centers near you.</p>
-                </div>
-
-                <div className="flex gap-2 bg-slate-800/50 p-1 rounded-xl border border-slate-700">
-                    {['All', 'Open', 'Full'].map((f) => (
-                        <button
-                            key={f}
-                            onClick={() => setFilter(f.toLowerCase())}
-                            className={`px-4 py-2 rounded-lg font-medium transition-all ${filter === f.toLowerCase()
-                                ? 'bg-blue-600 text-white shadow-lg'
-                                : 'text-slate-400 hover:text-white hover:bg-slate-700'
-                                }`}
-                        >
-                            {f}
-                        </button>
-                    ))}
-                </div>
+        <div className="space-y-10 pb-20">
+            {/* Header section with Premium Glow */}
+            <div className="text-center mb-4">
+                <h1 className="text-4xl font-black text-white tracking-tight uppercase italic">Safety <span className="text-blue-500">Shelters</span></h1>
+                <p className="text-slate-400 mt-3 text-lg">Real-time status of emergency relief points and medical centers.</p>
             </div>
 
-            {loading ? (
-                <div className="text-center py-20">
-                    <div className="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-                    <p className="text-slate-400">Locating shelters...</p>
-                </div>
-            ) : filteredShelters.length === 0 ? (
-                <div className="text-center py-20 bg-slate-800/30 rounded-3xl border border-slate-700/50">
-                    <Navigation size={48} className="mx-auto text-slate-600 mb-4" />
-                    <p className="text-slate-400 text-xl">No shelters found catering to your criteria.</p>
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredShelters.map((shelter) => (
-                        <div key={shelter._id} className="glass-panel p-6 rounded-2xl hover:border-blue-500/30 transition-all group relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-4">
-                                <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(shelter.status)}`}>
-                                    {shelter.status.toUpperCase()}
-                                </span>
-                            </div>
 
-                            <h3 className="text-xl font-bold text-white mb-2 pr-20">{shelter.name}</h3>
 
-                            <div className="space-y-3 mb-6">
-                                <div className="flex items-start gap-3 text-slate-300">
-                                    <MapPin size={18} className="text-blue-400 mt-1 shrink-0" />
-                                    <span>{shelter.location.address}</span>
-                                </div>
-                                <div className="flex items-center gap-3 text-slate-300">
-                                    <Users size={18} className="text-blue-400 shrink-0" />
-                                    <span>Capacity: {shelter.occupancy || 0} / {shelter.capacity}</span>
-                                </div>
-                                <div className="flex items-center gap-3 text-slate-300">
-                                    <Phone size={18} className="text-blue-400 shrink-0" />
-                                    <span>{shelter.contact}</span>
-                                </div>
-                            </div>
+            {/* Shelter List */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {shelters.map((shelter) => (
+                    <div key={shelter.id} className="group relative bg-[#0d1117] rounded-[2.5rem] border border-slate-800 p-8 hover:border-blue-500/40 transition-all duration-500 shadow-xl overflow-hidden">
+                        {/* Background subtle decoration */}
+                        <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                            <Home size={120} strokeWidth={1} />
+                        </div>
 
-                            <div className="border-t border-slate-700/50 pt-4 mt-auto">
-                                <h4 className="text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wider">Facilities</h4>
+                        <div className="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-6">
+                            <div className="space-y-6 flex-grow">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-3 bg-blue-600/10 rounded-2xl border border-blue-500/20 text-blue-500">
+                                        <MapPin size={24} />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-2xl font-black text-white uppercase tracking-tight group-hover:text-blue-400 transition-colors">{shelter.name}</h2>
+                                        <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">{shelter.location}</p>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="bg-slate-900/50 p-4 rounded-2xl border border-slate-800/50">
+                                        <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Occupancy</div>
+                                        <div className="flex items-baseline gap-2">
+                                            <span className="text-xl font-black text-white">{shelter.occupied}</span>
+                                            <span className="text-xs font-bold text-slate-600">/ {shelter.capacity}</span>
+                                        </div>
+                                    </div>
+                                    <div className="bg-slate-900/50 p-4 rounded-2xl border border-slate-800/50">
+                                        <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 flex items-center gap-2">
+                                            <AlertCircle size={10} /> Contact
+                                        </div>
+                                        <div className="text-sm font-black text-blue-500">{shelter.contact}</div>
+                                    </div>
+                                </div>
+
                                 <div className="flex flex-wrap gap-2">
-                                    {shelter.facilities.map((fac, idx) => (
-                                        <span key={idx} className="bg-slate-800 text-slate-300 text-xs px-2 py-1 rounded-md border border-slate-700">
-                                            {fac}
+                                    {shelter.amenities.map((amenity, idx) => (
+                                        <span key={idx} className="bg-slate-950 px-4 py-1.5 rounded-xl border border-slate-800 text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2 shadow-inner">
+                                            <CheckCircle2 size={10} className="text-blue-500" /> {amenity}
                                         </span>
                                     ))}
                                 </div>
+
+                                <a
+                                    href={shelter.mapsUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 bg-blue-600/10 hover:bg-blue-600 text-blue-500 hover:text-white px-5 py-2.5 rounded-2xl border border-blue-500/30 font-black uppercase tracking-widest text-[10px] transition-all group/btn"
+                                >
+                                    <MapPin size={14} className="group-hover/btn:animate-bounce" />
+                                    <span>Navigate to Shelter</span>
+                                </a>
                             </div>
 
-                            <button className="w-full mt-6 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-900/20 flex items-center justify-center gap-2">
-                                <Navigation size={18} />
-                                Get Directions
-                            </button>
+                            <div className="flex flex-col items-end gap-3 min-w-[120px]">
+                                <span className={`px-6 py-2.5 rounded-2xl border text-[10px] font-black uppercase tracking-[0.2em] shadow-lg ${getStatusStyles(shelter.status)}`}>
+                                    Status: {shelter.status}
+                                </span>
+                                <div className="flex items-center gap-2 px-4 py-2 bg-slate-900/30 rounded-xl border border-slate-800/50">
+                                    <Info size={12} className="text-slate-600" />
+                                    <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{shelter.lastUpdated}</span>
+                                </div>
+
+                                {/* Progress Bar */}
+                                <div className="w-full mt-4 bg-slate-800/50 h-2 rounded-full overflow-hidden border border-slate-800">
+                                    <div
+                                        className={`h-full transition-all duration-1000 ${shelter.status === 'Full' ? 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]' :
+                                            shelter.status === 'Medium' ? 'bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]' :
+                                                'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]'
+                                            }`}
+                                        style={{ width: `${(shelter.occupied / shelter.capacity) * 100}%` }}
+                                    ></div>
+                                </div>
+                            </div>
                         </div>
-                    ))}
-                </div>
-            )}
+                    </div>
+                ))}
+            </div>
+
+
         </div>
     );
 };
