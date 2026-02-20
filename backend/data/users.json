@@ -52,5 +52,26 @@
       "doctor"
     ],
     "availability": true
+  },
+  {
+    "id": "local-1771599574592",
+    "name": "Rajesh Kumar",
+    "email": "rajesh@volunteer.com",
+    "password": "$2a$10$KUc6Jq.ncgve4Sjy7dFUrOw2gWMUi/v.NCIIgy5alhjxVjRCL41ey",
+    "role": "user",
+    "createdAt": "2026-02-20T14:59:34.592Z",
+    "contact": "9123456789",
+    "location": "Navi Mumbai, Maharash tra",
+    "profession": "Disaster Relief Coordinator",
+    "reason": "As a dedicated disaster relief professional, I am motivated to join the DARS Response Force to make a meaningful impact in emergency situations. With my experience in community engagement and disaster assessment, I aim to support vulnerable populations and contribute to faster recovery efforts in affected areas.",
+    "volunteerStatus": "pending",
+    "isVolunteer": false,
+    "skills": [
+      "First Aid",
+      "Search & Rescue",
+      "Community Engagement",
+      "Disaster Assessment"
+    ],
+    "availability": true
   }
 ]

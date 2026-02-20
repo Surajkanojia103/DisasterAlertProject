@@ -68,5 +68,21 @@
     "needs": "Heavy machinery, Rocks removal equipment",
     "status": "Verified",
     "timestamp": "2026-02-04T14:00:59.785Z"
+  },
+  {
+    "_id": "local-17715993513194vs4nkc7f",
+    "userId": "admin-id",
+    "userName": "Administrator",
+    "disasterType": "Flood",
+    "location": "Test Location - Navi Mumbai",
+    "description": "Heavy flooding in low-lying areas of Navi Mumbai. Water level has risen significantly affecting multiple residential areas. Many families displaced and requiring immediate assistance.",
+    "severity": "Medium",
+    "contact": "9876543210",
+    "affected": "75",
+    "needs": "Water, Food, Medical supplies, Shelter",
+    "isStuck": false,
+    "shelterRequest": false,
+    "status": "Pending",
+    "timestamp": "2026-02-20T14:55:51.318Z"
   }
 ]
