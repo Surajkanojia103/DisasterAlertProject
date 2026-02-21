@@ -185,6 +185,30 @@ Your app will be live at: `https://dars-frontend.onrender.com`
 
 **Note:** Free tier services may spin down after inactivity. First request might take 30-60 seconds.
 
+### Deploy Frontend to Vercel (Fastest & Easiest)
+
+Vercel is the recommended platform for hosting the frontend due to its superior performance and ease of use.
+
+#### Step 1: Prepare your code
+1. Ensure you have pushed your latest changes to GitHub.
+2. The project contains a `frontend/vercel.json` file to handle SPA routing correctly.
+
+#### Step 2: Deploy on Vercel
+1. Go to [Vercel Dashboard](https://vercel.com/dashboard) and click **"Add New"** → **"Project"**.
+2. Connect your GitHub repository.
+3. Configure:
+   - **Framework Preset:** Vite (automatically detected)
+   - **Root Directory:** `frontend`
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+4. **Important:** Open the **Environment Variables** section and add:
+   - `VITE_API_URL` = `https://your-backend-url.onrender.com/api`
+5. Click **"Deploy"**.
+
+Your application will be live at `https://your-project-name.vercel.app`.
+
+---
+
 ### Alternative: Deploy Using render.yaml
 
 This repo includes a `render.yaml` file for automated deployment:
