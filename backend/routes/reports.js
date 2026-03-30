@@ -140,8 +140,6 @@ router.get('/:id', auth, async (req, res) => {
 
 const User = require('../models/User');
 
-// ... (existing imports)
-
 // Create a report
 router.post('/', auth, async (req, res) => {
     let userName = req.body.userName;

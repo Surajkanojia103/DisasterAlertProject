@@ -73,5 +73,74 @@
       "Disaster Assessment"
     ],
     "availability": true
+  },
+  {
+    "id": "local-1772205447949",
+    "name": "suraj",
+    "email": "jifeka6298@bultoc.com",
+    "password": "$2a$10$3cHvqRcQA06VxTT9hUMljuqRVasJ57NK08dfV4/gAilwQk5Ydy7gO",
+    "role": "user",
+    "createdAt": "2026-02-27T15:17:27.949Z"
+  },
+  {
+    "id": "local-1774711275346",
+    "name": "suraj",
+    "email": "lakiri8444@izkat.com",
+    "password": "$2a$10$qSHF9qS3C8TNZSllvDaN.eDyORChaSCvZqhJJruBx7LLSj3JQA9eG",
+    "role": "user",
+    "createdAt": "2026-03-28T15:21:15.346Z"
+  },
+  {
+    "id": "local-1774883380977",
+    "name": "suraj",
+    "email": "yakix34414@flownue.com",
+    "password": "$2a$10$pgUoHAUv6ohDwCsQeLz4nu0RJkk62jZV4oaSWcu.ulYzbZbi5jpJ6",
+    "role": "user",
+    "createdAt": "2026-03-30T15:09:40.978Z"
+  },
+  {
+    "id": "local-1774883984169",
+    "name": "Test User",
+    "email": "testuser@example.com",
+    "password": "$2a$10$F1oDb7AN/rOXlwtsewjtgu9QFZFPi6.CZlnmNChpcY5de./ADabbK",
+    "role": "user",
+    "createdAt": "2026-03-30T15:19:44.169Z"
+  },
+  {
+    "id": "local-1774884235963",
+    "name": "Test Two",
+    "email": "testtwo@example.com",
+    "password": "$2a$10$O7VWcVqzMd8NKFhLfE0Kdui2AfvWd4cqnJdvSrDA4MzgeuHTeT.kK",
+    "role": "user",
+    "createdAt": "2026-03-30T15:23:55.963Z"
+  },
+  {
+    "id": "local-1774884548946",
+    "name": "suraj",
+    "email": "tamaja9465@agoalz.com",
+    "password": "$2a$10$10IhrVoun.//Adw22BjOse5nCpd8zZQK5qKlpAZS2yWffLYo9i1Dq",
+    "role": "user",
+    "createdAt": "2026-03-30T15:29:08.946Z",
+    "contact": "9004260600",
+    "location": "navi mumbai",
+    "profession": "doctor",
+    "reason": "for helping people",
+    "bloodGroup": "B+",
+    "volunteerStatus": "pending",
+    "isVolunteer": false,
+    "volunteerAppliedAt": "2026-03-30T15:31:23.892Z",
+    "skills": [
+      "dressing",
+      "blood testing"
+    ],
+    "availability": true
+  },
+  {
+    "id": "local-1774884698030",
+    "name": "Test User",
+    "email": "testuser@test.com",
+    "password": "$2a$10$W5Jfq2ROYXW0t7LJUz.iCutdei9o4VMHWWZF5CYTyfFY.AMqxCC4.",
+    "role": "user",
+    "createdAt": "2026-03-30T15:31:38.030Z"
   }
 ]

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { Clock, MapPin, PlusCircle, User } from 'lucide-react';
+import { BASE_URL } from '../../apiConfig';
 
 const UserPanel = () => {
     const { user, login } = useAuth(); // Assuming login updates the user state
@@ -39,8 +40,7 @@ const UserPanel = () => {
                         'x-auth-token': token
                     }
                 };
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-                const res = await axios.get(`${API_URL}/reports/my-reports`, config);
+                const res = await axios.get(`${BASE_URL}/reports/my-reports`, config);
                 setMyReports(res.data);
 
                 const newStats = res.data.reduce((acc, report) => {
@@ -79,8 +79,7 @@ const UserPanel = () => {
                     'x-auth-token': token
                 }
             };
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-            const res = await axios.put(`${API_URL}/auth/profile`, profileData, config);
+            const res = await axios.put(`${BASE_URL}/auth/profile`, profileData, config);
 
             // We need to update the user context. 
             // Since we don't have a direct 'updateUser' method exposed in common AuthContext patterns,
@@ -235,7 +234,7 @@ const UserPanel = () => {
                                         </div>
                                         <div className="text-right">
                                             <Link
-                                                to={`/report-details/${report._id}`}
+                                                to={`/report-details/${report._id || report.id}`}
                                                 className="text-xs font-black text-blue-400 hover:text-blue-300 uppercase tracking-wider transition-colors"
                                             >
                                                 View Details →

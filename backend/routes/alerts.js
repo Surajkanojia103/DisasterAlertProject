@@ -8,11 +8,17 @@ const USGS_GEOJSON_URL = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summ
 const RELIEFWEB_API_URL = 'https://api.reliefweb.int/v1/disasters?appname=dars_app&limit=10&sort=date:desc';
 
 
-router.get('/', async (req, res) => {
-    const alerts = [];
-    const TIMEOUT = 8000;
+let cachedAlerts = [];
+let isFetching = false;
+let lastFetchTime = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const TIMEOUT = 5000;
 
-    console.log("Fetching alerts...");
+const fetchAllAlerts = async () => {
+    if (isFetching) return;
+    isFetching = true;
+    console.log("Fetching alerts in background...");
+    const alerts = [];
 
     const fetchGDACS = async () => {
         try {
@@ -148,9 +154,25 @@ router.get('/', async (req, res) => {
     ]);
 
     // Sort by date (newest first)
-    const sortedAlerts = alerts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    cachedAlerts = alerts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    lastFetchTime = Date.now();
+    isFetching = false;
+};
 
-    res.json(sortedAlerts);
+// Initial background fetch when server starts
+fetchAllAlerts();
+
+// Fetch periodically every 5 minutes
+setInterval(fetchAllAlerts, CACHE_DURATION);
+
+router.get('/', async (req, res) => {
+    // If the cache is completely empty and we haven't fetched yet, await the first fetch
+    if (cachedAlerts.length === 0 && !isFetching) {
+        await fetchAllAlerts();
+    }
+    
+    // Send cached alerts immediately
+    res.json(cachedAlerts);
 });
 
 module.exports = router;

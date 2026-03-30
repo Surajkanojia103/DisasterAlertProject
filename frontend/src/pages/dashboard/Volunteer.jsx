@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
+import { Link } from 'react-router-dom';
 import { HandHeart, CheckCircle, Clock, MapPin, Phone, Award, User as UserIcon, Briefcase, ShieldCheck, HeartPulse, Send, AlertCircle } from 'lucide-react';
 import axios from 'axios';
-import { BASE_URL } from '../apiConfig';
+import { BASE_URL } from '../../apiConfig';
 
 const Volunteer = () => {
     const { user, updateUser } = useAuth();
@@ -94,7 +95,7 @@ const Volunteer = () => {
                         </div>
                         <h2 className="text-2xl font-black text-white mb-4 italic uppercase">Tactical Auth Required</h2>
                         <p className="text-slate-400 max-w-md mx-auto mb-8 font-medium">Please login to the DARS network to access the enlistment portal.</p>
-                        <a href="/login" className="px-8 py-3 bg-rose-600 hover:bg-rose-500 text-white rounded-xl font-bold transition-all shadow-lg shadow-rose-900/30 text-xs">Connect to Network</a>
+                        <Link to="/login" className="px-8 py-3 bg-rose-600 hover:bg-rose-500 text-white rounded-xl font-bold transition-all shadow-lg shadow-rose-900/30 text-xs">Connect to Network</Link>
                     </div>
                 ) : success ? (
                     <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-8 text-emerald-400 flex flex-col items-center text-center animate-fade-in shadow-[0_0_30px_rgba(16,185,129,0.1)]">

@@ -1,5 +1,5 @@
-import ReportForm from '../components/ReportForm';
-import { useAuth } from '../context/AuthContext';
+import ReportForm from '../../components/ReportForm';
+import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { LogIn, UserPlus } from 'lucide-react';
 

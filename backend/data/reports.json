@@ -84,5 +84,21 @@
     "shelterRequest": false,
     "status": "Pending",
     "timestamp": "2026-02-20T14:55:51.318Z"
+  },
+  {
+    "_id": "local-177488460537759nji07ap",
+    "userId": "local-1774884548946",
+    "userName": "suraj",
+    "disasterType": "Flood",
+    "location": "Java, Indonesia",
+    "description": "many people died in this disaster",
+    "severity": "High",
+    "contact": "9004260060",
+    "affected": "50",
+    "needs": "food",
+    "isStuck": false,
+    "shelterRequest": false,
+    "status": "Pending",
+    "timestamp": "2026-03-30T15:30:05.375Z"
   }
 ]

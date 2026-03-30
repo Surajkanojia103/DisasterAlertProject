@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { fetchAlerts } from '../services/api';
-import AlertCard from '../components/AlertCard';
+import { fetchAlerts } from '../../services/api';
+import AlertCard from '../../components/AlertCard';
 import { Loader, AlertTriangle, Activity } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import heroRadar from '../assets/hero-radar.png';
-import heroAnalytics from '../assets/hero-analytics.png';
+import heroRadar from '../../assets/hero-radar.png';
+import heroAnalytics from '../../assets/hero-analytics.png';
 
 const Home = () => {
     const [alerts, setAlerts] = useState([]);

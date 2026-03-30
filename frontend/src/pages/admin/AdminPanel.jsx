@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { BASE_URL } from '../apiConfig';
-import { useAuth } from '../context/AuthContext';
+import { BASE_URL } from '../../apiConfig';
+import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle, XCircle, Clock, MapPin, Shield, FileText, ChevronLeft, ChevronRight, HandHeart } from 'lucide-react';
 
@@ -156,7 +156,7 @@ const AdminPanel = () => {
 
             // Update local state
             const updatedReports = reports.map(report =>
-                report._id === reportId ? { ...report, status: newStatus } : report
+                (report._id === reportId || report.id === reportId) ? { ...report, status: newStatus } : report
             );
             setReports(updatedReports);
 
@@ -401,14 +401,14 @@ const AdminPanel = () => {
                                         {report.status === 'Pending' && (
                                             <div className="flex lg:flex-col gap-2 shrink-0">
                                                 <button
-                                                    onClick={() => updateStatus(report._id, 'Verified')}
+                                                    onClick={() => updateStatus(report._id || report.id, 'Verified')}
                                                     className="flex items-center justify-center space-x-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-all shadow-sm hover:shadow-green-900/20 font-bold text-sm uppercase tracking-wider"
                                                 >
                                                     <CheckCircle size={16} />
                                                     <span>Verify</span>
                                                 </button>
                                                 <button
-                                                    onClick={() => updateStatus(report._id, 'Rejected')}
+                                                    onClick={() => updateStatus(report._id || report.id, 'Rejected')}
                                                     className="flex items-center justify-center space-x-2 px-6 py-2 bg-slate-800 text-red-400 border border-slate-700 rounded-lg hover:bg-red-900/20 hover:border-red-500/30 transition-all font-bold text-sm uppercase tracking-wider"
                                                 >
                                                     <XCircle size={16} />

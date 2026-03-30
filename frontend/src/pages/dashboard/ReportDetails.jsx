@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Clock, MapPin, AlertTriangle, CheckCircle, XCircle, ArrowLeft, Info, Users, Package } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
+import { BASE_URL } from '../../apiConfig';
 
 const ReportDetails = () => {
     const { id } = useParams();
@@ -19,8 +20,7 @@ const ReportDetails = () => {
                         'x-auth-token': token
                     }
                 };
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-                const res = await axios.get(`${API_URL}/reports/${id}`, config);
+                const res = await axios.get(`${BASE_URL}/reports/${id}`, config);
                 setReport(res.data);
             } catch (err) {
                 console.error("Error fetching report details:", err);
